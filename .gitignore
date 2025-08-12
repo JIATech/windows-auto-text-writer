@@ -1,0 +1,310 @@
+# ============================================================================
+# .gitignore para Windows Auto Text Writer
+# ============================================================================
+
+# ===== PYTHON =====
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ===== PYINSTALLER BUILDS =====
+# Directorios de construcción
+build/
+build_*/
+dist/
+dist_*/
+
+# Archivos temporales de PyInstaller
+*.spec
+
+# ===== PROYECTO ESPECÍFICO =====
+# Ejecutables generados
+*.exe
+*.app
+*.deb
+*.rpm
+
+# Archivos de configuración temporal
+config_temp.json
+settings_temp.ini
+
+# Logs de la aplicación
+*.log
+logs/
+app_*.log
+
+# Archivos de respaldo
+*.bak
+*.backup
+*~
+
+# Archivos temporales del sistema
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ===== DESARROLLO =====
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# PyCharm
+.idea/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Atom
+.atom/
+
+# ===== SISTEMA OPERATIVO =====
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# ===== ARCHIVOS TEMPORALES =====
+# Archivos temporales generales
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Archivos de caché
+cache/
+.cache/
+*.cache
+
+# ===== DOCUMENTACIÓN TEMPORAL =====
+# Documentación autogenerada
+docs/build/
+docs/_build/
+*.pdf
+*.docx
+
+# ===== TESTING =====
+# Coverage reports
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ===== ARCHIVOS DE USUARIO =====
+# Capturas de pantalla de prueba
+screenshots/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+
+# Archivos de configuración personal
+user_config.json
+personal_settings.ini
+
+# ===== EXCLUSIONES ESPECÍFICAS DEL PROYECTO =====
+# Builds optimizados experimentales
+build_temp/
+build_safe/
+build_minimal/
+dist_optimized/
+dist_safe/
+dist_minimal/
+
+# Archivos de prueba
+test_*.py
+*_test.py
+prueba_*.py
+
+# Configuraciones locales
+local_config.py
+dev_settings.py
+
+# ===== MANTENER ESTOS ARCHIVOS =====
+# Forzar inclusión de archivos importantes (sobrescribe las reglas de arriba)
+!requirements.txt
+!README*.md
+!LICENSE
+!.gitignore
+!auto_text_writer.py
+!auto_text_writer_gui.py
+!build_exe.py
+!build_gui_exe.py
+!build_optimized.py
+
+# ===== COMENTARIOS =====
+# Este .gitignore excluye:
+# 1. Todos los archivos de build y distribución
+# 2. Archivos temporales del sistema
+# 3. Configuraciones de IDEs
+# 4. Archivos de prueba y experimentales
+# 5. Logs y cachés
+# 
+# Mantiene solo:
+# - Código fuente principal
+# - Scripts de build
+# - Documentación esencial
+# - Archivos de configuración del proyecto
+
+.*/
