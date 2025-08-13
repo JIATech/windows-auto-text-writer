@@ -8,7 +8,7 @@ Automatizador de texto para aplicaciones Windows que envía comandos predetermin
 
 ## 🚀 Características
 
-- **Dos versiones disponibles**: Consola (v0.1) y GUI (v0.2)
+- **Dos versiones disponibles**: Consola (v0.1) y GUI (v0.2.1)
 - **Escritura automática**: Texto caracter por caracter con velocidad configurable
 - **Múltiples comandos**: Cada comando con su propio temporizador independiente
 - **Control global**: Tecla de acceso directo ('¡') desde cualquier aplicación
@@ -54,7 +54,7 @@ python auto_text_writer_gui.py      # Versión GUI
 
 ## 🎮 Uso
 
-### Versión GUI (v0.2) - Recomendada
+### Versión GUI (v0.2.1) - Recomendada
 
 1. **Configuración inicial**:
    - Título de ventana objetivo
@@ -107,7 +107,7 @@ Los ejecutables se generan en las carpetas `dist/` y `dist_safe/`.
 
 ```
 ├── auto_text_writer.py       # Versión consola (v0.1)
-├── auto_text_writer_gui.py   # Versión GUI (v0.2)
+├── auto_text_writer_gui.py   # Versión GUI (v0.2.1)
 ├── build_exe.py             # Script para build consola
 ├── build_gui_exe.py         # Script para build GUI
 ├── build_optimized.py       # Build con optimización de tamaño
@@ -119,7 +119,7 @@ Los ejecutables se generan en las carpetas `dist/` y `dist_safe/`.
 ## ⚙️ Configuración avanzada
 
 ### Parámetros principales:
-- **Título de ventana**: Nombre exacto de la ventana objetivo
+- **Título de ventana**: Coincidencia parcial en el nombre de la ventana objetivo
 - **Velocidad de escritura**: 0.1 (rápido) a 2.0+ (lento) segundos por caracter
 - **Intervalos**: Tiempo en minutos entre ejecuciones de cada comando
 
@@ -129,8 +129,9 @@ Los ejecutables se generan en las carpetas `dist/` y `dist_safe/`.
 ## 🐛 Solución de problemas
 
 ### La aplicación no encuentra la ventana:
-- Verifica que el título de ventana sea exacto (sensible a mayúsculas)
+- Usa una parte distintiva del título de ventana (ej: "MU La Plata" en lugar de "MU La Plata 99B Server")
 - Asegúrate de que la ventana esté abierta y visible
+- Si hay múltiples ventanas con el mismo texto, revisa el log para ver cuál está usando
 
 ### Los comandos no se escriben correctamente:
 - Ajusta la velocidad de escritura (prueba con valores más altos)
@@ -156,6 +157,29 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 
 **JIATech**
 - Email: johndev@jiacode.dev
+
+## 📋 Historial de versiones
+
+### v0.2.1 (Actual)
+- ✅ **Búsqueda mejorada de ventanas**: Ahora soporta coincidencia parcial en títulos
+- ✅ **Detección inteligente**: Prioriza ventanas visibles cuando hay múltiples coincidencias
+- ✅ **Logging mejorado**: Informa qué ventana está usando y advierte sobre múltiples coincidencias
+- ✅ **Interfaz actualizada**: Etiqueta clarificada como "Título de ventana (parcial)"
+- ✅ **Ejemplos universales**: Textos de ejemplo genéricos en lugar de comandos específicos de juegos
+- ✅ **Velocidad optimizada**: Velocidad por defecto reducida a 0.2s para mejor experiencia
+
+### v0.2
+- ✅ Interfaz gráfica completa con tkinter
+- ✅ Gestión avanzada de textos (agregar, editar, eliminar)
+- ✅ Modo oscuro/claro
+- ✅ Control global con tecla '¡'
+- ✅ Log en tiempo real
+- ✅ Ejecución inmediata + temporizadores independientes
+
+### v0.1
+- ✅ Versión consola básica
+- ✅ Configuración interactiva
+- ✅ Escritura caracter por caracter
 
 ## 🙏 Reconocimientos
 

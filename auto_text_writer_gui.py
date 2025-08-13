@@ -13,15 +13,15 @@ from pynput import keyboard
 class MUAutoTextWriterGUI:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Windows Auto Text Writer v0.2")
+        self.root.title("Windows Auto Text Writer v0.2.1")
         self.root.geometry("1050x900")
         self.root.resizable(True, True)
         
         # Variables de estado
         self.running = False
         self.text_configs = []
-        self.typing_speed = 0.5
-        self.window_title = "MU La Plata 99B"
+        self.typing_speed = 0.2
+        self.window_title = "Bloc de notas"
         
         # Configuración de dimensiones del diálogo "Acerca de"
         self.about_dialog_width = 600
@@ -57,7 +57,7 @@ class MUAutoTextWriterGUI:
         main_frame.columnconfigure(1, weight=1)
         
         # Título
-        title_label = ttk.Label(main_frame, text="Windows Auto Text Writer v0.2", 
+        title_label = ttk.Label(main_frame, text="Windows Auto Text Writer v0.2.1", 
                                font=('Arial', 16, 'bold'))
         title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
         
@@ -67,7 +67,7 @@ class MUAutoTextWriterGUI:
         config_frame.columnconfigure(1, weight=1)
         
         # Título de ventana
-        ttk.Label(config_frame, text="Título de ventana:").grid(row=0, column=0, sticky=tk.W, pady=2)
+        ttk.Label(config_frame, text="Título de ventana (parcial):").grid(row=0, column=0, sticky=tk.W, pady=2)
         self.window_title_var = tk.StringVar(value=self.window_title)
         window_entry = ttk.Entry(config_frame, textvariable=self.window_title_var, width=40)
         window_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=2, padx=(10, 0))
@@ -181,9 +181,9 @@ class MUAutoTextWriterGUI:
     def load_default_commands(self):
         """Carga los comandos por defecto"""
         self.text_configs = [
-            {"text": "/attack on", "interval_minutes": 91, "enabled": True},
-            {"text": "/pickjewel on", "interval_minutes": 31, "enabled": True},
-            {"text": "/party on", "interval_minutes": 32, "enabled": True}
+            {"text": "Hola, este es un texto de prueba.", "interval_minutes": 5, "enabled": True},
+            {"text": "Recordatorio: revisar el correo electrónico.", "interval_minutes": 10, "enabled": True},
+            {"text": "Nota importante para más tarde.", "interval_minutes": 15, "enabled": True}
         ]
         self.refresh_commands_tree()
         self.log("Comandos por defecto cargados")
@@ -325,7 +325,7 @@ class MUAutoTextWriterGUI:
                                font=('Arial', 18, 'bold'))
         title_label.pack(pady=(0, 5))
         
-        version_label = ttk.Label(main_frame, text="Versión 0.2", 
+        version_label = ttk.Label(main_frame, text="Versión 0.2.1", 
                                  font=('Arial', 12), foreground='gray')
         version_label.pack(pady=(0, 25))
         
@@ -684,10 +684,44 @@ Funcionalidades principales:
             return False
             
     def find_window(self):
-        """Busca la ventana por título"""
+        """Busca la ventana por coincidencia parcial en el título"""
         try:
+            # Primero intentar búsqueda exacta (más rápida)
             windows = gw.getWindowsWithTitle(self.window_title)
-            return windows[0] if windows else None
+            if windows:
+                return windows[0]
+            
+            # Si no encuentra por título exacto, buscar por coincidencia parcial
+            all_windows = gw.getAllWindows()
+            matching_windows = []
+            
+            for window in all_windows:
+                if window.title and self.window_title.lower() in window.title.lower():
+                    matching_windows.append(window)
+            
+            if matching_windows:
+                # Si hay múltiples coincidencias, priorizar la ventana visible
+                visible_windows = [w for w in matching_windows if w.visible]
+                if visible_windows:
+                    if len(visible_windows) > 1:
+                        self.log(f"ADVERTENCIA: {len(visible_windows)} ventanas encontradas con '{self.window_title}':")
+                        for i, w in enumerate(visible_windows):
+                            self.log(f"  {i+1}. '{w.title}'")
+                        self.log(f"Usando la primera: '{visible_windows[0].title}'")
+                    else:
+                        self.log(f"Ventana encontrada por coincidencia parcial: '{visible_windows[0].title}'")
+                    return visible_windows[0]
+                else:
+                    if len(matching_windows) > 1:
+                        self.log(f"ADVERTENCIA: {len(matching_windows)} ventanas encontradas con '{self.window_title}' (no visibles):")
+                        for i, w in enumerate(matching_windows):
+                            self.log(f"  {i+1}. '{w.title}'")
+                        self.log(f"Usando la primera: '{matching_windows[0].title}'")
+                    else:
+                        self.log(f"Ventana encontrada por coincidencia parcial: '{matching_windows[0].title}'")
+                    return matching_windows[0]
+            
+            return None
         except Exception as e:
             self.log(f"Error buscando ventana: {e}")
             return None

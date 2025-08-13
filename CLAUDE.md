@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is **Windows Auto Text Writer**, a Python automation tool for sending predetermined text commands to Windows applications at configurable intervals. The project has two main versions:
 
 - **v0.1 (Console)**: `auto_text_writer.py` - Command-line interface with interactive configuration
-- **v0.2 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes and advanced command management
+- **v0.2.1 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes and advanced text management
 
 ## Core Architecture
 
@@ -19,7 +19,7 @@ This is **Windows Auto Text Writer**, a Python automation tool for sending prede
    - Multi-threaded execution with independent command timers
    - Immediate execution on startup + scheduled intervals
 
-2. **MUAutoTextWriterGUI Class** (`auto_text_writer_gui.py`): Complete GUI implementation
+2. **AutoTextWriterGUI Class** (`auto_text_writer_gui.py`): Complete GUI implementation
    - Advanced theming system (dark/light modes)
    - Real-time command management (add/edit/delete/enable/disable)
    - Global hotkey support ('¡' key for start/stop)
@@ -31,7 +31,7 @@ This is **Windows Auto Text Writer**, a Python automation tool for sending prede
 - **Threading**: GUI uses separate execution thread to prevent UI blocking
 - **Window Management**: Uses `pygetwindow` for window detection, `pyautogui` for automation
 - **Theme System**: Comprehensive ttk.Style configuration for both themes with hover effect removal
-- **Command Execution**: Enter → character-by-character typing → Enter sequence for game console compatibility
+- **Text Execution**: Character-by-character typing with configurable speed for any text application
 
 ## Build Commands
 
@@ -60,22 +60,22 @@ python build_optimized.py
 ```
 
 ### Build Outputs
-- `dist/MU_AutoText_v0.1.exe` - Console version (~67MB)
-- `dist/MU_AutoText_GUI.exe` - GUI version (~67MB)
+- `dist/WindowsAutoText_v0.1.exe` - Console version (~67MB)
+- `dist/WindowsAutoText_GUI.exe` - GUI version (~67MB)
 - `dist_safe/WindowsAutoText_*_Safe.exe` - Size-optimized builds
 
 ## Configuration
 
-### Default Commands (Easter Eggs)
-The application ships with MU Online game commands as defaults:
-- `/attack on` - 91 minute intervals
-- `/pickjewel on` - 31 minute intervals  
-- `/party on` - 32 minute intervals
+### Default Text Examples
+The application ships with sample text messages as defaults:
+- "Hola, este es un texto de prueba." - 5 minute intervals
+- "Recordatorio: revisar el correo electrónico." - 10 minute intervals  
+- "Nota importante para más tarde." - 15 minute intervals
 
 ### Key Configuration Parameters
-- **Window Title**: Target application window (default: "MU La Plata 99B")
-- **Typing Speed**: Character delay in seconds (default: 0.5s)
-- **Command States**: Each command can be individually enabled/disabled
+- **Window Title**: Target application window (default: "Bloc de notas")
+- **Typing Speed**: Character delay in seconds (default: 0.2s)
+- **Text States**: Each text can be individually enabled/disabled
 
 ## Development Notes
 
