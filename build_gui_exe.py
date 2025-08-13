@@ -4,238 +4,238 @@ import os
 from pathlib import Path
 
 def install_pyinstaller():
-    """Instala PyInstaller si no está disponible"""
+    """Installs PyInstaller if not available"""
     try:
         import PyInstaller
-        print("✓ PyInstaller ya está instalado")
+        print("✓ PyInstaller is already installed")
         return True
     except ImportError:
-        print("Instalando PyInstaller...")
+        print("Installing PyInstaller...")
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-            print("✓ PyInstaller instalado exitosamente")
+            print("✓ PyInstaller installed successfully")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"✗ Error instalando PyInstaller: {e}")
+            print(f"✗ Error installing PyInstaller: {e}")
             return False
 
 def build_gui_executable():
-    """Construye el ejecutable GUI usando PyInstaller"""
+    """Builds the GUI executable using PyInstaller"""
     script_path = "auto_text_writer_gui.py"
     
     if not os.path.exists(script_path):
-        print(f"✗ Error: No se encontró el archivo {script_path}")
+        print(f"✗ Error: File {script_path} not found")
         return False
     
-    print(f"Construyendo ejecutable GUI de {script_path}...")
+    print(f"Building GUI executable from {script_path}...")
     
-    # Comando PyInstaller con opciones específicas para GUI
+    # PyInstaller command with GUI-specific options
     cmd = [
         sys.executable, "-m", "PyInstaller",
-        "--onefile",                       # Un solo archivo ejecutable
-        "--windowed",                      # Sin ventana de consola (para GUI)
-        "--name", "MU_AutoText_GUI",       # Nombre del ejecutable
-        "--distpath", "dist",              # Carpeta de salida
-        "--workpath", "build",             # Carpeta temporal
-        "--specpath", ".",                 # Archivo .spec en directorio actual
-        "--icon", "NONE",                  # Sin icono personalizado
-        "--add-data", "requirements.txt;.", # Incluir requirements.txt
+        "--onefile",                       # Single executable file
+        "--windowed",                      # No console window (for GUI)
+        "--name", "WindowsAutoText_GUI",       # Executable name
+        "--distpath", "dist",              # Output folder
+        "--workpath", "build",             # Temporary folder
+        "--specpath", ".",                 # .spec file in current directory
+        "--icon", "NONE",                  # No custom icon
+        "--add-data", "requirements.txt;.", # Include requirements.txt
         script_path
     ]
     
     try:
-        print("Ejecutando PyInstaller...")
+        print("Running PyInstaller...")
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode == 0:
-            print("✓ Ejecutable GUI creado exitosamente")
-            exe_path = Path("dist/MU_AutoText_GUI.exe")
+            print("✓ GUI executable created successfully")
+            exe_path = Path("dist/WindowsAutoText_GUI.exe")
             if exe_path.exists():
-                print(f"✓ Archivo ejecutable: {exe_path.absolute()}")
-                print(f"✓ Tamaño: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
+                print(f"✓ Executable file: {exe_path.absolute()}")
+                print(f"✓ Size: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
                 return True
             else:
-                print("✗ El archivo ejecutable no se encontró en la ubicación esperada")
+                print("✗ Executable file not found in expected location")
                 return False
         else:
-            print("✗ Error durante la construcción:")
+            print("✗ Error during build:")
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
             return False
             
     except Exception as e:
-        print(f"✗ Error ejecutando PyInstaller: {e}")
+        print(f"✗ Error running PyInstaller: {e}")
         return False
 
 def create_gui_batch():
-    """Crea un archivo batch para ejecutar el .exe GUI fácilmente"""
+    """Creates a batch file to run the GUI .exe easily"""
     batch_content = '''@echo off
-title MU Auto Text Writer GUI v0.2
+title Windows Auto Text Writer GUI v0.3
 echo ==========================================
-echo    MU Auto Text Writer GUI - v0.2
+echo    Windows Auto Text Writer GUI - v0.3
 echo ==========================================
 echo.
-echo Iniciando la aplicación GUI...
+echo Starting GUI application...
 echo.
 
 cd /d "%~dp0"
-if exist "dist\\MU_AutoText_GUI.exe" (
-    echo Ejecutando MU_AutoText_GUI.exe...
-    "dist\\MU_AutoText_GUI.exe"
+if exist "dist\\WindowsAutoText_GUI.exe" (
+    echo Running WindowsAutoText_GUI.exe...
+    "dist\\WindowsAutoText_GUI.exe"
 ) else (
-    echo Error: No se encontró MU_AutoText_GUI.exe en la carpeta dist
+    echo Error: WindowsAutoText_GUI.exe not found in dist folder
     echo.
-    echo Asegúrate de haber ejecutado build_gui_exe.py primero
+    echo Make sure you have run build_gui_exe.py first
     echo.
     pause
 )
 '''
     
-    with open("ejecutar_mu_gui.bat", "w", encoding="utf-8") as f:
+    with open("run_mu_gui.bat", "w", encoding="utf-8") as f:
         f.write(batch_content)
     
-    print("✓ Archivo batch GUI creado: ejecutar_mu_gui.bat")
+    print("✓ GUI batch file created: run_mu_gui.bat")
 
 def create_readme():
-    """Crea un archivo README con instrucciones"""
-    readme_content = '''# MU Auto Text Writer v0.2 - Ejecutable GUI
+    """Creates a README file with instructions"""
+    readme_content = '''# Windows Auto Text Writer v0.3 - GUI Executable
 
-## Archivos Generados
+## Generated Files
 
-- `dist/MU_AutoText_GUI.exe` - Ejecutable principal de la aplicación GUI
-- `ejecutar_mu_gui.bat` - Archivo batch para ejecutar fácilmente
+- `dist/WindowsAutoText_GUI.exe` - Main GUI application executable
+- `run_mu_gui.bat` - Batch file to run easily
 
-## Cómo usar
+## How to Use
 
-### Opción 1: Archivo Batch (Recomendado)
-1. Haz doble clic en `ejecutar_mu_gui.bat`
+### Option 1: Batch File (Recommended)
+1. Double-click on `run_mu_gui.bat`
 
-### Opción 2: Ejecutable Directo
-1. Navega a la carpeta `dist/`
-2. Haz doble clic en `MU_AutoText_GUI.exe`
+### Option 2: Direct Executable
+1. Navigate to the `dist/` folder
+2. Double-click on `WindowsAutoText_GUI.exe`
 
-## Características de la v0.2
+## v0.2 Features
 
-### Control por Tecla
-- Presiona la tecla `¡` desde cualquier lugar para iniciar/detener
+### Hotkey Control
+- Press the `¡` key from anywhere to start/stop
 
-### Interfaz Gráfica
-- Configuración visual del título de ventana y velocidad
-- Gestión completa de comandos (agregar, editar, eliminar)
-- Lista visual de comandos con estado (Activo/Desactivado)
-- Log en tiempo real de la actividad
+### Graphical Interface
+- Visual configuration of window title and speed
+- Complete command management (add, edit, delete)
+- Visual command list with status (Active/Disabled)
+- Real-time activity logging
 
-### Funcionalidades
-- Comandos por defecto incluidos
-- Activar/desactivar comandos individualmente
-- Validación de datos automática
-- Monitoreo de próximas ejecuciones
+### Functionality
+- Default commands included
+- Enable/disable commands individually
+- Automatic data validation
+- Next execution monitoring
 
-## Comandos por Defecto
+## Default Commands
 
-1. `/attack on` - cada 91 minutos
-2. `/pickjewel on` - cada 31 minutos  
-3. `/party on` - cada 32 minutos
+1. `/attack on` - every 91 minutes
+2. `/pickjewel on` - every 31 minutes  
+3. `/party on` - every 32 minutes
 
-## Uso Básico
+## Basic Usage
 
-1. Abrir la aplicación
-2. Verificar/configurar el título de ventana (default: "MU La Plata 99B")
-3. Ajustar velocidad de escritura si es necesario
-4. Revisar comandos en la lista
-5. Presionar `¡` o el botón "Iniciar" para comenzar
-6. Presionar `¡` nuevamente para detener
+1. Open the application
+2. Verify/configure window title (default: "MU La Plata 99B")
+3. Adjust typing speed if necessary
+4. Review commands in the list
+5. Press `¡` or the "Start" button to begin
+6. Press `¡` again to stop
 
-## Notas Importantes
+## Important Notes
 
-- El ejecutable NO requiere Python instalado
-- Incluye todas las dependencias necesarias
-- Interfaz completamente autónoma
-- Los logs se muestran en tiempo real
-- Configuración persistente durante la sesión
+- The executable does NOT require Python installed
+- Includes all necessary dependencies
+- Completely standalone interface
+- Logs are shown in real time
+- Persistent configuration during session
 
-## Solución de Problemas
+## Troubleshooting
 
-Si el ejecutable no funciona:
-1. Verificar que la ventana objetivo esté abierta
-2. Verificar que el título de ventana coincida exactamente
-3. Revisar los logs en la aplicación para mensajes de error
+If the executable doesn't work:
+1. Verify that the target window is open
+2. Verify that the window title matches exactly
+3. Check the logs in the application for error messages
 
 ---
-Generado con MU Auto Text Writer Build System v0.2
+Generated with MU Auto Text Writer Build System v0.2
 '''
     
     with open("README_GUI.md", "w", encoding="utf-8") as f:
         f.write(readme_content)
     
-    print("✓ Archivo README creado: README_GUI.md")
+    print("✓ README file created: README_GUI.md")
 
 def main():
     print("=" * 60)
-    print("    GENERADOR DE EJECUTABLE GUI - MU AUTO TEXT v0.2")
+    print("    GUI EXECUTABLE BUILDER - WINDOWS AUTO TEXT v0.3")
     print("=" * 60)
     print()
     
-    # Verificar que el archivo principal existe
+    # Check that the main file exists
     if not os.path.exists("auto_text_writer_gui.py"):
-        print("✗ Error: No se encontró auto_text_writer_gui.py")
-        print("  Asegúrate de ejecutar este script en la misma carpeta")
+        print("✗ Error: auto_text_writer_gui.py not found")
+        print("  Make sure to run this script in the same folder")
         return
     
-    # Verificar que requirements.txt existe
+    # Check that requirements.txt exists
     if not os.path.exists("requirements.txt"):
-        print("✗ Error: No se encontró requirements.txt")
-        print("  Asegúrate de tener las dependencias listadas")
+        print("✗ Error: requirements.txt not found")
+        print("  Make sure to have the dependencies listed")
         return
     
-    # Instalar dependencias primero
-    print("1. Instalando dependencias...")
+    # Install dependencies first
+    print("1. Installing dependencies...")
     try:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-        print("✓ Dependencias instaladas")
+        print("✓ Dependencies installed")
     except subprocess.CalledProcessError as e:
-        print(f"✗ Error instalando dependencias: {e}")
+        print(f"✗ Error installing dependencies: {e}")
         return
     
-    # Instalar PyInstaller
-    print("\n2. Verificando PyInstaller...")
+    # Install PyInstaller
+    print("\n2. Checking PyInstaller...")
     if not install_pyinstaller():
         return
     
-    # Construir ejecutable GUI
-    print("\n3. Construyendo ejecutable GUI...")
+    # Build GUI executable
+    print("\n3. Building GUI executable...")
     if not build_gui_executable():
         return
     
-    # Crear archivo batch
-    print("\n4. Creando archivo de ejecución...")
+    # Create batch file
+    print("\n4. Creating execution file...")
     create_gui_batch()
     
-    # Crear README
-    print("\n5. Creando documentación...")
+    # Create README
+    print("\n5. Creating documentation...")
     create_readme()
     
     print("\n" + "=" * 60)
-    print("    ✓ PROCESO COMPLETADO EXITOSAMENTE")
+    print("    ✓ PROCESS COMPLETED SUCCESSFULLY")
     print("=" * 60)
     print()
-    print("Archivos generados:")
-    print("  • dist/MU_AutoText_GUI.exe      - Ejecutable GUI principal")
-    print("  • ejecutar_mu_gui.bat           - Launcher de la aplicación")
-    print("  • README_GUI.md                 - Documentación de uso")
+    print("Generated files:")
+    print("  • dist/WindowsAutoText_GUI.exe      - Main GUI executable")
+    print("  • run_mu_gui.bat               - Application launcher")
+    print("  • README_GUI.md                 - Usage documentation")
     print()
-    print("Para usar la aplicación GUI:")
-    print("  1. Haz doble clic en 'ejecutar_mu_gui.bat'")
-    print("  2. O ejecuta directamente 'dist/MU_AutoText_GUI.exe'")
+    print("To use the GUI application:")
+    print("  1. Double-click on 'run_mu_gui.bat'")
+    print("  2. Or run directly 'dist/WindowsAutoText_GUI.exe'")
     print()
-    print("Características de la v0.2:")
-    print("  • Interfaz gráfica profesional")
-    print("  • Control con tecla '¡' desde cualquier lugar")
-    print("  • Gestión completa de comandos")
-    print("  • Log en tiempo real")
-    print("  • Sin dependencias externas (ejecutable independiente)")
+    print("v0.2 Features:")
+    print("  • Professional graphical interface")
+    print("  • Control with '¡' key from anywhere")
+    print("  • Complete command management")
+    print("  • Real-time logging")
+    print("  • No external dependencies (standalone executable)")
     print()
-    print("¡La aplicación está lista para usar!")
+    print("The application is ready to use!")
 
 if __name__ == "__main__":
     main()

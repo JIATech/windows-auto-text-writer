@@ -4,40 +4,40 @@ import os
 from pathlib import Path
 
 def install_pyinstaller():
-    """Instala PyInstaller si no está disponible"""
+    """Installs PyInstaller if not available"""
     try:
         import PyInstaller
-        print("PyInstaller ya está instalado")
+        print("PyInstaller is already installed")
         return True
     except ImportError:
-        print("Instalando PyInstaller...")
+        print("Installing PyInstaller...")
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-            print("PyInstaller instalado exitosamente")
+            print("PyInstaller installed successfully")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Error instalando PyInstaller: {e}")
+            print(f"Error installing PyInstaller: {e}")
             return False
 
 def build_executable():
-    """Construye el ejecutable usando PyInstaller"""
+    """Builds the executable using PyInstaller"""
     script_path = "auto_text_writer.py"
     
     if not os.path.exists(script_path):
-        print(f"Error: No se encontró el archivo {script_path}")
+        print(f"Error: File {script_path} not found")
         return False
     
-    print(f"Construyendo ejecutable de {script_path}...")
+    print(f"Building executable from {script_path}...")
     
-    # Comando PyInstaller con opciones para mantener terminal visible
+    # PyInstaller command with options to keep terminal visible
     cmd = [
         sys.executable, "-m", "PyInstaller",
-        "--onefile",                    # Un solo archivo ejecutable
-        "--console",                    # Mantener ventana de consola
-        "--name", "MU_AutoText",        # Nombre del ejecutable
-        "--distpath", "dist",           # Carpeta de salida
-        "--workpath", "build",          # Carpeta temporal
-        "--specpath", ".",              # Archivo .spec en directorio actual
+        "--onefile",                    # Single executable file
+        "--console",                    # Keep console window
+        "--name", "MU_AutoText",        # Executable name
+        "--distpath", "dist",           # Output folder
+        "--workpath", "build",          # Temporary folder
+        "--specpath", ".",              # .spec file in current directory
         script_path
     ]
     
@@ -45,109 +45,109 @@ def build_executable():
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode == 0:
-            print("✓ Ejecutable creado exitosamente")
-            exe_path = Path("dist/MU_AutoText.exe")
+            print("✓ Executable created successfully")
+            exe_path = Path("dist/WindowsAutoText_v0.1.exe")
             if exe_path.exists():
-                print(f"✓ Archivo ejecutable: {exe_path.absolute()}")
-                print(f"✓ Tamaño: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
+                print(f"✓ Executable file: {exe_path.absolute()}")
+                print(f"✓ Size: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
                 return True
             else:
-                print("✗ El archivo ejecutable no se encontró en la ubicación esperada")
+                print("✗ Executable file not found in expected location")
                 return False
         else:
-            print("✗ Error durante la construcción:")
+            print("✗ Error during build:")
             print(result.stderr)
             return False
             
     except Exception as e:
-        print(f"✗ Error ejecutando PyInstaller: {e}")
+        print(f"✗ Error running PyInstaller: {e}")
         return False
 
 def create_test_batch():
-    """Crea un archivo batch para ejecutar el .exe fácilmente"""
+    """Creates a batch file to run the .exe easily"""
     batch_content = '''@echo off
 echo ==========================================
-echo    MU Auto Text Writer - Ejecutable
+echo    MU Auto Text Writer - Executable
 echo ==========================================
 echo.
-echo Iniciando el programa...
-echo Presiona Ctrl+C para detener
+echo Starting the program...
+echo Press Ctrl+C to stop
 echo.
 
 cd /d "%~dp0"
-if exist "dist\\MU_AutoText.exe" (
-    "dist\\MU_AutoText.exe"
+if exist "dist\\WindowsAutoText_v0.1.exe" (
+    "dist\\WindowsAutoText_v0.1.exe"
 ) else (
-    echo Error: No se encontró MU_AutoText.exe en la carpeta dist
+    echo Error: WindowsAutoText_v0.1.exe not found in dist folder
     echo.
-    echo Asegúrate de haber ejecutado build_exe.py primero
+    echo Make sure you have run build_exe.py first
 )
 
 echo.
-echo El programa ha terminado.
+echo The program has finished.
 pause
 '''
     
-    with open("ejecutar_mu_autotext.bat", "w", encoding="utf-8") as f:
+    with open("run_mu_autotext.bat", "w", encoding="utf-8") as f:
         f.write(batch_content)
     
-    print("✓ Archivo batch creado: ejecutar_mu_autotext.bat")
+    print("✓ Batch file created: run_mu_autotext.bat")
 
 def main():
     print("=" * 50)
-    print("    GENERADOR DE EJECUTABLE - MU AUTO TEXT")
+    print("    EXECUTABLE BUILDER - MU AUTO TEXT")
     print("=" * 50)
     print()
     
-    # Verificar que el archivo principal existe
+    # Check that the main file exists
     if not os.path.exists("auto_text_writer.py"):
-        print("✗ Error: No se encontró auto_text_writer.py")
-        print("  Asegúrate de ejecutar este script en la misma carpeta")
+        print("✗ Error: auto_text_writer.py not found")
+        print("  Make sure to run this script in the same folder")
         return
     
-    # Verificar que requirements.txt existe
+    # Check that requirements.txt exists
     if not os.path.exists("requirements.txt"):
-        print("✗ Error: No se encontró requirements.txt")
-        print("  Asegúrate de tener las dependencias instaladas")
+        print("✗ Error: requirements.txt not found")
+        print("  Make sure to have the dependencies installed")
         return
     
-    # Instalar dependencias primero
-    print("1. Instalando dependencias...")
+    # Install dependencies first
+    print("1. Installing dependencies...")
     try:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-        print("✓ Dependencias instaladas")
+        print("✓ Dependencies installed")
     except subprocess.CalledProcessError as e:
-        print(f"✗ Error instalando dependencias: {e}")
+        print(f"✗ Error installing dependencies: {e}")
         return
     
-    # Instalar PyInstaller
-    print("\n2. Verificando PyInstaller...")
+    # Install PyInstaller
+    print("\n2. Checking PyInstaller...")
     if not install_pyinstaller():
         return
     
-    # Construir ejecutable
-    print("\n3. Construyendo ejecutable...")
+    # Build executable
+    print("\n3. Building executable...")
     if not build_executable():
         return
     
-    # Crear archivo batch
-    print("\n4. Creando archivo de ejecución...")
+    # Create batch file
+    print("\n4. Creating execution file...")
     create_test_batch()
     
     print("\n" + "=" * 50)
-    print("    ✓ PROCESO COMPLETADO EXITOSAMENTE")
+    print("    ✓ PROCESS COMPLETED SUCCESSFULLY")
     print("=" * 50)
     print()
-    print("Archivos generados:")
-    print("  • dist/MU_AutoText.exe        - Ejecutable principal")
-    print("  • ejecutar_mu_autotext.bat    - Archivo para ejecutar fácilmente")
+    print("Generated files:")
+    print("  • dist/WindowsAutoText_v0.1.exe        - Main executable")
+    print("  • run_mu_autotext.bat         - File to run easily")
     print()
-    print("Para probar:")
-    print("  1. Haz doble clic en 'ejecutar_mu_autotext.bat'")
-    print("  2. O ejecuta directamente 'dist/MU_AutoText.exe'")
+    print("To test:")
+    print("  1. Double-click on 'run_mu_autotext.bat'")
+    print("  2. Or run directly 'dist/WindowsAutoText_v0.1.exe'")
     print()
-    print("Nota: El ejecutable mantiene la terminal abierta para")
-    print("      mostrar los mensajes de estado en tiempo real.")
+    print("Note: The executable keeps the terminal open to")
+    print("      display status messages in real time.")
 
 if __name__ == "__main__":
     main()

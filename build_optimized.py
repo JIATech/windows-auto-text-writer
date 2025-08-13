@@ -134,8 +134,8 @@ def compare_sizes():
     
     # Archivos a comparar
     files_to_check = [
-        ("dist/MU_AutoText_v0.1.exe", "Consola Original"),
-        ("dist/MU_AutoText_GUI.exe", "GUI Original"),
+        ("dist/WindowsAutoText_v0.1.exe", "Console Original"),
+        ("dist/WindowsAutoText_GUI.exe", "GUI Original"),
         ("dist_safe/WindowsAutoText_Console_Safe.exe", "Consola Segura"),
         ("dist_safe/WindowsAutoText_GUI_Safe.exe", "GUI Segura"),
         ("dist_minimal/WindowsAutoText_GUI_Minimal.exe", "GUI Mínima"),
@@ -152,32 +152,32 @@ def compare_sizes():
             print(f"{description:20} | No encontrado")
 
 def main():
-    print("🔧 DIAGNÓSTICO: El error de Python DLL indica que las optimizaciones")
-    print("   anteriores fueron demasiado agresivas y rompieron dependencias.")
+    print("🔧 DIAGNOSIS: Python DLL error indicates that previous")
+    print("   optimizations were too aggressive and broke dependencies.")
     print()
-    print("Opciones de construcción SEGURAS:")
-    print("1. 🛡️  Optimización segura (sin romper funcionalidad)")
-    print("2. 📦 Tamaño mínimo (solo bibliotecas grandes excluidas)")
-    print("3. 📊 Comparar tamaños existentes")
-    print("4. 🧹 Limpiar builds problemáticos")
+    print("SAFE build options:")
+    print("1. 🛡️  Safe optimization (without breaking functionality)")
+    print("2. 📦 Minimal size (only large libraries excluded)")
+    print("3. 📊 Compare existing sizes")
+    print("4. 🧹 Clean problematic builds")
     
-    choice = input("\nElige una opción (1-4): ").strip()
+    choice = input("\nChoose an option (1-4): ").strip()
     
     if choice == "1":
         build_safe_optimized()
     elif choice == "2":
         success = build_minimal_size()
         if success:
-            print("\n🎉 ¡Construcción exitosa! Prueba el ejecutable.")
+            print("\n🎉 Successful build! Test the executable.")
     elif choice == "3":
         compare_sizes()
     elif choice == "4":
         clean_problematic_builds()
     else:
-        print("Opción no válida")
+        print("Invalid option")
 
 def clean_problematic_builds():
-    """Limpia builds que causan problemas"""
+    """Cleans builds that cause problems"""
     import shutil
     
     dirs_to_clean = ["dist_optimized", "build_temp", "build_safe", "build_minimal"]
@@ -186,13 +186,13 @@ def clean_problematic_builds():
         if os.path.exists(dir_name):
             try:
                 shutil.rmtree(dir_name)
-                print(f"✓ Limpiado: {dir_name}")
+                print(f"✓ Cleaned: {dir_name}")
             except Exception as e:
-                print(f"✗ Error limpiando {dir_name}: {e}")
+                print(f"✗ Error cleaning {dir_name}: {e}")
         else:
-            print(f"- {dir_name} no existe")
+            print(f"- {dir_name} doesn't exist")
     
-    print("\n🧹 Limpieza completada. Ahora puedes intentar builds seguros.")
+    print("\n🧹 Cleanup completed. You can now try safe builds.")
 
 if __name__ == "__main__":
     main()

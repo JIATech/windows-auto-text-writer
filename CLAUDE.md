@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is **Windows Auto Text Writer**, a Python automation tool for sending predetermined text commands to Windows applications at configurable intervals. The project has two main versions:
 
 - **v0.1 (Console)**: `auto_text_writer.py` - Command-line interface with interactive configuration
-- **v0.2.1 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes and advanced text management
+- **v0.3 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes, advanced text management, and complete English translation
 
 ## Core Architecture
 
@@ -68,12 +68,12 @@ python build_optimized.py
 
 ### Default Text Examples
 The application ships with sample text messages as defaults:
-- "Hola, este es un texto de prueba." - 5 minute intervals
-- "Recordatorio: revisar el correo electrónico." - 10 minute intervals  
-- "Nota importante para más tarde." - 15 minute intervals
+- "Hello, this is a test message." - 5 minute intervals
+- "Reminder: check email." - 10 minute intervals  
+- "Important note for later." - 15 minute intervals
 
 ### Key Configuration Parameters
-- **Window Title**: Target application window (default: "Bloc de notas")
+- **Window Title**: Target application window (default: "Notepad")
 - **Typing Speed**: Character delay in seconds (default: 0.2s)
 - **Text States**: Each text can be individually enabled/disabled
 

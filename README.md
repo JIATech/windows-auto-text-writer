@@ -1,192 +1,199 @@
 # Windows Auto Text Writer
 
-Automatizador de texto para aplicaciones Windows que envía comandos predeterminados a intervalos configurables.
+Windows automation tool that sends predetermined text commands to applications at configurable intervals.
 
 ![Screenshot](https://img.shields.io/badge/Platform-Windows-blue)
 ![Python Version](https://img.shields.io/badge/Python-3.7+-green)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-## 🚀 Características
+## 🚀 Features
 
-- **Dos versiones disponibles**: Consola (v0.1) y GUI (v0.2.1)
-- **Escritura automática**: Texto caracter por caracter con velocidad configurable
-- **Múltiples comandos**: Cada comando con su propio temporizador independiente
-- **Control global**: Tecla de acceso directo ('¡') desde cualquier aplicación
-- **Interfaz moderna**: GUI con modo oscuro/claro
-- **Gestión completa**: Agregar, editar, eliminar y activar/desactivar comandos
-- **Registro en tiempo real**: Log de actividad con timestamps
-- **Ejecutables independientes**: Sin necesidad de Python instalado
+- **Two versions available**: Console (v0.1) and GUI (v0.2.1)
+- **Automatic writing**: Character-by-character text with configurable speed
+- **Multiple commands**: Each command with its own independent timer
+- **Global control**: Hotkey ('¡') from any application
+- **Modern interface**: GUI with dark/light mode
+- **Complete management**: Add, edit, delete and enable/disable commands
+- **Real-time logging**: Activity log with timestamps
+- **Standalone executables**: No Python installation required
 
-## 📋 Requisitos
+## 📋 Requirements
 
-### Para ejecutar desde código fuente:
-- Python 3.7 o superior
-- Windows (requerido para pygetwindow y pyautogui)
+### To run from source code:
+- Python 3.7 or higher
+- Windows (required for pygetwindow and pyautogui)
 
-### Dependencias:
+### Dependencies:
 ```
 pyautogui==0.9.54
 pygetwindow==0.0.9
 pynput==1.7.6
 ```
 
-## 🛠️ Instalación
+## 🛠️ Installation
 
-### Opción 1: Ejecutables (Recomendado)
-1. Descarga los ejecutables desde la sección [Releases](../../releases)
-2. Ejecuta directamente:
-   - `MU_AutoText_v0.1.exe` - Versión consola
-   - `MU_AutoText_GUI.exe` - Versión GUI
+### Option 1: Executables (Recommended)
+1. Download executables from the [Releases](../../releases) section
+2. Run directly:
+   - `MU_AutoText_v0.1.exe` - Console version
+   - `MU_AutoText_GUI.exe` - GUI version
 
-### Opción 2: Desde código fuente
+### Option 2: From source code
 ```bash
-# Clonar repositorio
+# Clone repository
 git clone https://github.com/JIATech/windows-auto-text-writer.git
 cd windows-auto-text-writer
 
-# Instalar dependencias
+# Install dependencies
 pip install -r requirements.txt
 
-# Ejecutar
-python auto_text_writer.py          # Versión consola
-python auto_text_writer_gui.py      # Versión GUI
+# Run
+python auto_text_writer.py          # Console version
+python auto_text_writer_gui.py      # GUI version
 ```
 
-## 🎮 Uso
+## 🎮 Usage
 
-### Versión GUI (v0.2.1) - Recomendada
+### GUI Version (v0.2.1) - Recommended
 
-1. **Configuración inicial**:
-   - Título de ventana objetivo
-   - Velocidad de escritura (segundos entre caracteres)
+1. **Initial configuration**:
+   - Target window title
+   - Writing speed (seconds between characters)
 
-2. **Gestión de comandos**:
-   - Agregar comandos personalizados
-   - Cargar comandos por defecto (incluye comandos para MU Online)
-   - Editar intervalos y activar/desactivar individualmente
+2. **Command management**:
+   - Add custom commands
+   - Load default commands (includes MU Online commands)
+   - Edit intervals and enable/disable individually
 
 3. **Control**:
-   - Botón "Iniciar" o tecla '¡' para comenzar
-   - Ejecución inmediata de todos los comandos al inicio
-   - Después continúa con temporizadores independientes
+   - "Start" button or '¡' key to begin
+   - Immediate execution of all commands at startup
+   - Then continues with independent timers
 
-4. **Características adicionales**:
-   - Modo oscuro/claro con botón toggle
-   - Log en tiempo real
-   - Información detallada en "Acerca de"
+4. **Additional features**:
+   - Dark/light mode with toggle button
+   - Real-time log
+   - Detailed information in "About"
 
-### Versión Consola (v0.1)
+### Console Version (v0.1)
 
-1. Ejecuta `auto_text_writer.py`
-2. Sigue el asistente de configuración interactivo
-3. Presiona Ctrl+C para detener
+1. Run `auto_text_writer.py`
+2. Follow the interactive configuration wizard
+3. Press Ctrl+C to stop
 
-### Comandos por defecto
+### Default commands
 
-El programa incluye comandos preconfigurados para MU Online:
-- `/attack on` - cada 91 minutos
-- `/pickjewel on` - cada 31 minutos  
-- `/party on` - cada 32 minutos
+The program includes preconfigured commands for MU Online:
+- `/attack on` - every 91 minutes
+- `/pickjewel on` - every 31 minutes  
+- `/party on` - every 32 minutes
 
-## 🔨 Generar ejecutables
+## 🔨 Build executables
 
 ```bash
-# Versión consola
+# Console version
 python build_exe.py
 
-# Versión GUI
+# GUI version
 python build_gui_exe.py
 
-# Versión optimizada (menor tamaño)
+# Optimized version (smaller size)
 python build_optimized.py
 ```
 
-Los ejecutables se generan en las carpetas `dist/` y `dist_safe/`.
+Executables are generated in `dist/` and `dist_safe/` folders.
 
-## 📁 Estructura del proyecto
+## 📁 Project structure
 
 ```
-├── auto_text_writer.py       # Versión consola (v0.1)
-├── auto_text_writer_gui.py   # Versión GUI (v0.2.1)
-├── build_exe.py             # Script para build consola
-├── build_gui_exe.py         # Script para build GUI
-├── build_optimized.py       # Build con optimización de tamaño
-├── requirements.txt         # Dependencias
-├── CLAUDE.md               # Documentación para desarrollo
-└── README.md               # Este archivo
+├── auto_text_writer.py       # Console version (v0.1)
+├── auto_text_writer_gui.py   # GUI version (v0.3)
+├── build_exe.py             # Console build script
+├── build_gui_exe.py         # GUI build script
+├── build_optimized.py       # Size-optimized build
+├── requirements.txt         # Dependencies
+├── CLAUDE.md               # Development documentation
+└── README.md               # This file
 ```
 
-## ⚙️ Configuración avanzada
+## ⚙️ Advanced configuration
 
-### Parámetros principales:
-- **Título de ventana**: Coincidencia parcial en el nombre de la ventana objetivo
-- **Velocidad de escritura**: 0.1 (rápido) a 2.0+ (lento) segundos por caracter
-- **Intervalos**: Tiempo en minutos entre ejecuciones de cada comando
+### Main parameters:
+- **Window title**: Partial match in target window name
+- **Writing speed**: 0.1 (fast) to 2.0+ (slow) seconds per character
+- **Intervals**: Time in minutes between command executions
 
-### Tecla global:
-- **'¡'**: Iniciar/detener desde cualquier aplicación (solo GUI)
+### Global hotkey:
+- **'¡'**: Start/stop from any application (GUI only)
 
-## 🐛 Solución de problemas
+## 🐛 Troubleshooting
 
-### La aplicación no encuentra la ventana:
-- Usa una parte distintiva del título de ventana (ej: "MU La Plata" en lugar de "MU La Plata 99B Server")
-- Asegúrate de que la ventana esté abierta y visible
-- Si hay múltiples ventanas con el mismo texto, revisa el log para ver cuál está usando
+### Application doesn't find the window:
+- Use a distinctive part of the window title (e.g., "MU La Plata" instead of "MU La Plata 99B Server")
+- Make sure the window is open and visible
+- If there are multiple windows with the same text, check the log to see which one it's using
 
-### Los comandos no se escriben correctamente:
-- Ajusta la velocidad de escritura (prueba con valores más altos)
-- Verifica que la ventana objetivo tenga el foco
+### Commands don't type correctly:
+- Adjust writing speed (try higher values)
+- Verify that the target window has focus
 
-### Error de Python DLL en ejecutables:
-- Usa `build_optimized.py` en lugar de optimizaciones agresivas
-- Los ejecutables estándar (~67MB) incluyen todas las dependencias necesarias
+### Python DLL error in executables:
+- Use `build_optimized.py` instead of aggressive optimizations
+- Standard executables (~67MB) include all necessary dependencies
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
-3. Commit tus cambios (`git commit -am 'Agrega nueva característica'`)
-4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+This project is under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-## 👤 Autor
+## 👤 Author
 
 **JIATech**
 - Email: johndev@jiacode.dev
 
-## 📋 Historial de versiones
+## 📋 Version history
 
-### v0.2.1 (Actual)
-- ✅ **Búsqueda mejorada de ventanas**: Ahora soporta coincidencia parcial en títulos
-- ✅ **Detección inteligente**: Prioriza ventanas visibles cuando hay múltiples coincidencias
-- ✅ **Logging mejorado**: Informa qué ventana está usando y advierte sobre múltiples coincidencias
-- ✅ **Interfaz actualizada**: Etiqueta clarificada como "Título de ventana (parcial)"
-- ✅ **Ejemplos universales**: Textos de ejemplo genéricos en lugar de comandos específicos de juegos
-- ✅ **Velocidad optimizada**: Velocidad por defecto reducida a 0.2s para mejor experiencia
+### v0.3 (Current)
+- ✅ **Complete English translation**: Fully internationalized for global users
+- ✅ **Enhanced window search**: Supports partial title matching with smart detection
+- ✅ **Improved logging**: Clear feedback on window detection and conflict warnings
+- ✅ **Optimized performance**: Faster typing speed (0.2s) and universal text examples
+- ✅ **Professional interface**: Clean English UI suitable for international users
+
+### v0.2.1
+- ✅ **Enhanced window search**: Partial matching in titles with smart detection
+- ✅ **Smart detection**: Prioritizes visible windows when there are multiple matches
+- ✅ **Improved logging**: Reports which window is being used and warns about multiple matches
+- ✅ **Updated interface**: Label clarified as "Window title (partial)"
+- ✅ **Universal examples**: Generic example texts instead of game-specific commands
+- ✅ **Optimized speed**: Default speed reduced to 0.2s for better experience
 
 ### v0.2
-- ✅ Interfaz gráfica completa con tkinter
-- ✅ Gestión avanzada de textos (agregar, editar, eliminar)
-- ✅ Modo oscuro/claro
-- ✅ Control global con tecla '¡'
-- ✅ Log en tiempo real
-- ✅ Ejecución inmediata + temporizadores independientes
+- ✅ Complete graphical interface with tkinter
+- ✅ Advanced text management (add, edit, delete)
+- ✅ Dark/light mode
+- ✅ Global control with '¡' key
+- ✅ Real-time log
+- ✅ Immediate execution + independent timers
 
 ### v0.1
-- ✅ Versión consola básica
-- ✅ Configuración interactiva
-- ✅ Escritura caracter por caracter
+- ✅ Basic console version
+- ✅ Interactive configuration
+- ✅ Character-by-character writing
 
-## 🙏 Reconocimientos
+## 🙏 Acknowledgments
 
-- [PyAutoGUI](https://pyautogui.readthedocs.io/) - Automatización de GUI
-- [PyGetWindow](https://github.com/asweigart/PyGetWindow) - Gestión de ventanas
-- [pynput](https://github.com/moses-palmer/pynput) - Detección de teclas globales
+- [PyAutoGUI](https://pyautogui.readthedocs.io/) - GUI automation
+- [PyGetWindow](https://github.com/asweigart/PyGetWindow) - Window management
+- [pynput](https://github.com/moses-palmer/pynput) - Global key detection
 
 ---
 
-⭐ ¡Si este proyecto te resultó útil, considera darle una estrella!
+⭐ If this project was useful to you, consider giving it a star!
