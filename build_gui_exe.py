@@ -40,6 +40,11 @@ def build_gui_executable():
         "--specpath", ".",                 # .spec file in current directory
         "--icon", "NONE",                  # No custom icon
         "--add-data", "requirements.txt;.", # Include requirements.txt
+        "--add-data", "i18n.py;.",          # Include internationalization system
+        "--add-data", "config.py;.",        # Include configuration system
+        "--add-data", "lang;lang",          # Include language files directory
+        "--hidden-import", "json",          # Ensure JSON module is included
+        "--hidden-import", "pathlib",       # Ensure pathlib is included
         script_path
     ]
     
@@ -70,9 +75,9 @@ def build_gui_executable():
 def create_gui_batch():
     """Creates a batch file to run the GUI .exe easily"""
     batch_content = '''@echo off
-title Windows Auto Text Writer GUI v0.3
+title Windows Auto Text Writer GUI v0.4
 echo ==========================================
-echo    Windows Auto Text Writer GUI - v0.3
+echo    Windows Auto Text Writer GUI - v0.4
 echo ==========================================
 echo.
 echo Starting GUI application...
@@ -98,7 +103,7 @@ if exist "dist\\WindowsAutoText_GUI.exe" (
 
 def create_readme():
     """Creates a README file with instructions"""
-    readme_content = '''# Windows Auto Text Writer v0.3 - GUI Executable
+    readme_content = '''# Windows Auto Text Writer v0.4 - GUI Executable
 
 ## Generated Files
 
@@ -172,7 +177,7 @@ Generated with MU Auto Text Writer Build System v0.2
 
 def main():
     print("=" * 60)
-    print("    GUI EXECUTABLE BUILDER - WINDOWS AUTO TEXT v0.3")
+    print("    GUI EXECUTABLE BUILDER - WINDOWS AUTO TEXT v0.4")
     print("=" * 60)
     print()
     

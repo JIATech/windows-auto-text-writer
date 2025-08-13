@@ -8,7 +8,7 @@ Windows automation tool that sends predetermined text commands to applications a
 
 ## 🚀 Features
 
-- **Two versions available**: Console (v0.1) and GUI (v0.2.1)
+- **Two versions available**: Console (v0.1) and GUI (v0.4)
 - **Automatic writing**: Character-by-character text with configurable speed
 - **Multiple commands**: Each command with its own independent timer
 - **Global control**: Hotkey ('¡') from any application
@@ -34,9 +34,9 @@ pynput==1.7.6
 
 ### Option 1: Executables (Recommended)
 1. Download executables from the [Releases](../../releases) section
-2. Run directly:
-   - `MU_AutoText_v0.1.exe` - Console version
-   - `MU_AutoText_GUI.exe` - GUI version
+   - Complete standalone application with all languages included
+   - No Python installation required
+   - All translation files embedded automatically
 
 ### Option 2: From source code
 ```bash
@@ -54,39 +54,38 @@ python auto_text_writer_gui.py      # GUI version
 
 ## 🎮 Usage
 
-### GUI Version (v0.2.1) - Recommended
+### GUI Version (v0.4) - Recommended
 
-1. **Initial configuration**:
-   - Target window title
-   - Writing speed (seconds between characters)
+1. **Language selection**:
+   - Choose between English and Spanish
+   - Interface updates instantly
+   - Preferences saved automatically
 
-2. **Command management**:
-   - Add custom commands
-   - Load default commands (includes MU Online commands)
+2. **Initial configuration**:
+   - Target window title (partial matching supported)
+   - Writing speed (seconds between characters, default: 0.2s)
+
+3. **Text management**:
+   - Add custom texts
+   - Load default example texts (adapts to selected language)
    - Edit intervals and enable/disable individually
 
-3. **Control**:
+4. **Control**:
    - "Start" button or '¡' key to begin
-   - Immediate execution of all commands at startup
+   - Immediate execution of all texts at startup
    - Then continues with independent timers
 
-4. **Additional features**:
+5. **Additional features**:
    - Dark/light mode with toggle button
-   - Real-time log
-   - Detailed information in "About"
+   - Real-time log with translated messages
+   - Multi-language "About" dialog
+   - Smart content localization (preserves custom window titles)
 
 ### Console Version (v0.1)
 
 1. Run `auto_text_writer.py`
 2. Follow the interactive configuration wizard
 3. Press Ctrl+C to stop
-
-### Default commands
-
-The program includes preconfigured commands for MU Online:
-- `/attack on` - every 91 minutes
-- `/pickjewel on` - every 31 minutes  
-- `/party on` - every 32 minutes
 
 ## 🔨 Build executables
 
@@ -107,7 +106,12 @@ Executables are generated in `dist/` and `dist_safe/` folders.
 
 ```
 ├── auto_text_writer.py       # Console version (v0.1)
-├── auto_text_writer_gui.py   # GUI version (v0.3)
+├── auto_text_writer_gui.py   # GUI version (v0.4)
+├── i18n.py                  # Internationalization system
+├── config.py                # Configuration management
+├── lang/                    # Language files directory
+│   ├── en.json             # English translations
+│   └── es.json             # Spanish translations
 ├── build_exe.py             # Console build script
 ├── build_gui_exe.py         # GUI build script
 ├── build_optimized.py       # Size-optimized build
@@ -129,7 +133,7 @@ Executables are generated in `dist/` and `dist_safe/` folders.
 ## 🐛 Troubleshooting
 
 ### Application doesn't find the window:
-- Use a distinctive part of the window title (e.g., "MU La Plata" instead of "MU La Plata 99B Server")
+- Use a distinctive part of the window title
 - Make sure the window is open and visible
 - If there are multiple windows with the same text, check the log to see which one it's using
 
@@ -160,8 +164,16 @@ This project is under the MIT License. See the [LICENSE](LICENSE) file for more 
 
 ## 📋 Version history
 
-### v0.3 (Current)
-- ✅ **Complete English translation**: Fully internationalized for global users
+### v0.4 (Current)
+- ✅ **Complete multi-language support**: English/Spanish with intelligent language switching
+- ✅ **Smart localization**: Default content adapts automatically, preserves custom user input
+- ✅ **Persistent preferences**: Language and theme settings saved automatically
+- ✅ **Intelligent UI updates**: Live language switching without losing user configuration
+- ✅ **Enhanced window search**: Supports partial title matching with smart detection
+- ✅ **Optimized performance**: Faster typing speed (0.2s) and universal text examples
+
+### v0.3
+- ✅ **Multi-language foundation**: English/Spanish interface implementation
 - ✅ **Enhanced window search**: Supports partial title matching with smart detection
 - ✅ **Improved logging**: Clear feedback on window detection and conflict warnings
 - ✅ **Optimized performance**: Faster typing speed (0.2s) and universal text examples

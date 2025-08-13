@@ -10,25 +10,37 @@ import json
 import os
 from pynput import keyboard
 
+# Import internationalization and configuration modules
+from i18n import t, set_language, get_language, get_available_languages, get_i18n
+from config import get_config
+
 class AutoTextWriterGUI:
     def __init__(self):
+        # Initialize configuration and i18n
+        self.config = get_config()
+        
+        # Load language from config and set up i18n
+        saved_language = self.config.get_language()
+        set_language(saved_language)
+        
         self.root = tk.Tk()
-        self.root.title("Windows Auto Text Writer v0.3")
+        self.root.title(t("app.title"))
         self.root.geometry("1050x900")
         self.root.resizable(True, True)
         
         # State variables
         self.running = False
         self.text_configs = []
-        self.typing_speed = 0.2
-        self.window_title = "Notepad"
+        self.typing_speed = self.config.get('typing_speed', 0.2)
+        self.window_title = t("defaults.window_title")
         
         # About dialog dimensions configuration
         self.about_dialog_width = 600
         self.about_dialog_height = 850
         
         # Dark mode configuration
-        self.dark_mode = False
+        saved_theme = self.config.get_theme()
+        self.dark_mode = (saved_theme == 'dark')
         
         # Pyautogui configuration
         pyautogui.FAILSAFE = True
@@ -57,105 +69,131 @@ class AutoTextWriterGUI:
         main_frame.columnconfigure(1, weight=1)
         
         # Title
-        title_label = ttk.Label(main_frame, text="Windows Auto Text Writer v0.3", 
-                               font=('Arial', 16, 'bold'))
-        title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
+        self.title_label = ttk.Label(main_frame, text=t("app.title"), 
+                                    font=('Arial', 16, 'bold'))
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
         
         # Configuration frame
-        config_frame = ttk.LabelFrame(main_frame, text="Configuration", padding="10")
-        config_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
-        config_frame.columnconfigure(1, weight=1)
+        self.config_frame = ttk.LabelFrame(main_frame, text=t("ui.configuration"), padding="10")
+        self.config_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        self.config_frame.columnconfigure(1, weight=1)
         
         # Window title
-        ttk.Label(config_frame, text="Window title (partial):").grid(row=0, column=0, sticky=tk.W, pady=2)
+        self.window_title_label = ttk.Label(self.config_frame, text=t("ui.window_title"))
+        self.window_title_label.grid(row=0, column=0, sticky=tk.W, pady=2)
         self.window_title_var = tk.StringVar(value=self.window_title)
-        window_entry = ttk.Entry(config_frame, textvariable=self.window_title_var, width=40)
-        window_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=2, padx=(10, 0))
+        self.window_entry = ttk.Entry(self.config_frame, textvariable=self.window_title_var, width=40)
+        self.window_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=2, padx=(10, 0))
         
         # Typing speed
-        ttk.Label(config_frame, text="Speed (sec/char):").grid(row=1, column=0, sticky=tk.W, pady=2)
+        self.typing_speed_label = ttk.Label(self.config_frame, text=t("ui.typing_speed"))
+        self.typing_speed_label.grid(row=1, column=0, sticky=tk.W, pady=2)
         self.typing_speed_var = tk.DoubleVar(value=self.typing_speed)
-        speed_spinbox = ttk.Spinbox(config_frame, from_=0.01, to=10.0, increment=0.1, 
-                                   textvariable=self.typing_speed_var, width=10)
-        speed_spinbox.grid(row=1, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+        self.speed_spinbox = ttk.Spinbox(self.config_frame, from_=0.01, to=10.0, increment=0.1, 
+                                        textvariable=self.typing_speed_var, width=10)
+        self.speed_spinbox.grid(row=1, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+        
+        # Language selector
+        self.language_label = ttk.Label(self.config_frame, text=t("ui.language"))
+        self.language_label.grid(row=2, column=0, sticky=tk.W, pady=2)
+        self.language_var = tk.StringVar()
+        available_langs = get_available_languages()
+        self.language_combo = ttk.Combobox(self.config_frame, textvariable=self.language_var,
+                                          values=list(available_langs.values()), state="readonly", width=15)
+        self.language_combo.grid(row=2, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+        
+        # Set current language in combobox
+        current_lang = get_language()
+        current_lang_name = available_langs.get(current_lang, available_langs['en'])
+        self.language_var.set(current_lang_name)
+        
+        # Bind language change event
+        self.language_combo.bind('<<ComboboxSelected>>', self.on_language_changed)
         
         # Commands frame
-        commands_frame = ttk.LabelFrame(main_frame, text="Commands", padding="10")
-        commands_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
-        commands_frame.columnconfigure(0, weight=1)
-        commands_frame.rowconfigure(1, weight=1)
+        self.commands_frame = ttk.LabelFrame(main_frame, text=t("ui.commands"), padding="10")
+        self.commands_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
+        self.commands_frame.columnconfigure(0, weight=1)
+        self.commands_frame.rowconfigure(1, weight=1)
         
         # Command buttons
-        buttons_frame = ttk.Frame(commands_frame)
+        buttons_frame = ttk.Frame(self.commands_frame)
         buttons_frame.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
         
-        ttk.Button(buttons_frame, text="Add Command", 
-                  command=self.add_command).pack(side=tk.LEFT, padx=(0, 5))
-        ttk.Button(buttons_frame, text="Edit Command", 
-                  command=self.edit_command).pack(side=tk.LEFT, padx=(0, 5))
-        ttk.Button(buttons_frame, text="Delete Command", 
-                  command=self.delete_command).pack(side=tk.LEFT, padx=(0, 5))
-        ttk.Button(buttons_frame, text="Load Defaults", 
-                  command=self.load_default_commands).pack(side=tk.LEFT)
+        self.add_button = ttk.Button(buttons_frame, text=t("buttons.add_command"), 
+                                    command=self.add_command)
+        self.add_button.pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.edit_button = ttk.Button(buttons_frame, text=t("buttons.edit_command"), 
+                                     command=self.edit_command)
+        self.edit_button.pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.delete_button = ttk.Button(buttons_frame, text=t("buttons.delete_command"), 
+                                       command=self.delete_command)
+        self.delete_button.pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.defaults_button = ttk.Button(buttons_frame, text=t("buttons.load_defaults"), 
+                                         command=self.load_default_commands)
+        self.defaults_button.pack(side=tk.LEFT)
         
         # Commands list
         columns = ("Text", "Interval", "Status")
-        self.commands_tree = ttk.Treeview(commands_frame, columns=columns, show='headings', height=8)
+        self.commands_tree = ttk.Treeview(self.commands_frame, columns=columns, show='headings', height=8)
         self.commands_tree.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        # Configure columns
-        self.commands_tree.heading("Text", text="Command")
-        self.commands_tree.heading("Interval", text="Interval (min)")
-        self.commands_tree.heading("Status", text="Status")
+        # Configure columns - will be updated in refresh_ui()
+        self.commands_tree.heading("Text", text=t("table.command"))
+        self.commands_tree.heading("Interval", text=t("table.interval"))
+        self.commands_tree.heading("Status", text=t("table.status"))
         
         self.commands_tree.column("Text", width=300)
         self.commands_tree.column("Interval", width=100)
         self.commands_tree.column("Status", width=100)
         
         # Scrollbar for the list
-        commands_scrollbar = ttk.Scrollbar(commands_frame, orient=tk.VERTICAL, command=self.commands_tree.yview)
+        commands_scrollbar = ttk.Scrollbar(self.commands_frame, orient=tk.VERTICAL, command=self.commands_tree.yview)
         commands_scrollbar.grid(row=1, column=1, sticky=(tk.N, tk.S))
         self.commands_tree.configure(yscrollcommand=commands_scrollbar.set)
         
         # Control frame
-        control_frame = ttk.LabelFrame(main_frame, text="Control", padding="10")
-        control_frame.grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        self.control_frame = ttk.LabelFrame(main_frame, text=t("ui.control"), padding="10")
+        self.control_frame.grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
         
         # Control buttons
-        self.start_button = ttk.Button(control_frame, text="Start (¡)", 
+        self.start_button = ttk.Button(self.control_frame, text=t("buttons.start"), 
                                       command=self.toggle_execution, style='Green.TButton')
         self.start_button.pack(side=tk.LEFT, padx=(0, 10))
         
         # Status label
-        self.status_var = tk.StringVar(value="Stopped - Press '¡' to start")
-        status_label = ttk.Label(control_frame, textvariable=self.status_var, 
-                                font=('Arial', 10, 'bold'))
-        status_label.pack(side=tk.LEFT, padx=(0, 20))
+        self.status_var = tk.StringVar(value=t("messages.status_stopped"))
+        self.status_label = ttk.Label(self.control_frame, textvariable=self.status_var, 
+                                     font=('Arial', 10, 'bold'))
+        self.status_label.pack(side=tk.LEFT, padx=(0, 20))
         
         # Information/credits button
-        info_button = ttk.Button(control_frame, text="About", 
-                                command=self.show_about_dialog)
-        info_button.pack(side=tk.RIGHT, padx=(0, 10))
+        self.info_button = ttk.Button(self.control_frame, text=t("ui.about"), 
+                                     command=self.show_about_dialog)
+        self.info_button.pack(side=tk.RIGHT, padx=(0, 10))
         
         # Dark mode button
-        self.theme_button = ttk.Button(control_frame, text="🌙", 
+        self.theme_button = ttk.Button(self.control_frame, text="🌙" if not self.dark_mode else "☀️", 
                                       command=self.toggle_theme, width=3)
         self.theme_button.pack(side=tk.RIGHT)
         
         # Log frame
-        log_frame = ttk.LabelFrame(main_frame, text="Activity Log", padding="10")
-        log_frame.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
-        log_frame.columnconfigure(0, weight=1)
-        log_frame.rowconfigure(0, weight=1)
+        self.log_frame = ttk.LabelFrame(main_frame, text=t("ui.activity_log"), padding="10")
+        self.log_frame.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
+        self.log_frame.columnconfigure(0, weight=1)
+        self.log_frame.rowconfigure(0, weight=1)
         
         # Text area for logs
-        self.log_text = scrolledtext.ScrolledText(log_frame, height=8, width=80)
+        self.log_text = scrolledtext.ScrolledText(self.log_frame, height=8, width=80)
         self.log_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         # Credits in the bottom right corner
-        credits_label = ttk.Label(main_frame, text="JIATech - johndev@jiacode.dev", 
-                                 font=('Arial', 8), foreground='gray')
-        credits_label.grid(row=5, column=1, sticky=tk.E, pady=(10, 0))
+        self.credits_label = ttk.Label(main_frame, text="JIATech - johndev@jiacode.dev", 
+                                      font=('Arial', 8), foreground='gray')
+        self.credits_label.grid(row=5, column=1, sticky=tk.E, pady=(10, 0))
         
         # Configure row weights
         main_frame.rowconfigure(2, weight=1)
@@ -164,6 +202,92 @@ class AutoTextWriterGUI:
         # Configure styles
         self.setup_themes()
         self.apply_theme()
+        
+    def on_language_changed(self, event):
+        """Handle language selection change"""
+        selected_name = self.language_var.get()
+        
+        # Find language code by name
+        available_langs = get_available_languages()
+        selected_code = None
+        for code, name in available_langs.items():
+            if name == selected_name:
+                selected_code = code
+                break
+        
+        if selected_code and selected_code != get_language():
+            # Set the new language
+            set_language(selected_code)
+            
+            # Save language preference
+            self.config.set_language(selected_code)
+            
+            # Update the default window title ONLY if it matches known default values
+            # This preserves custom user window titles when switching languages
+            current_title = self.window_title_var.get().strip()
+            
+            # Known default values for both languages
+            english_default = "Notepad"
+            spanish_default = "Bloc de notas"
+            
+            # Only update if current title exactly matches a known default
+            # Custom titles entered by the user will be preserved
+            if current_title == english_default or current_title == spanish_default:
+                # Set language first, then get the new default
+                set_language(selected_code)
+                new_default_title = t("defaults.window_title")
+                self.window_title_var.set(new_default_title)
+                self.window_title = new_default_title
+            else:
+                # Just set the language without changing window title
+                set_language(selected_code)
+            
+            # Refresh the entire UI
+            self.refresh_ui()
+            
+            # Log the change
+            self.log(t("log.language_changed"))
+    
+    def refresh_ui(self):
+        """Refresh all UI text after language change"""
+        # Update main window title
+        self.root.title(t("app.title"))
+        
+        # Update all labels and frames
+        self.title_label.configure(text=t("app.title"))
+        self.config_frame.configure(text=t("ui.configuration"))
+        self.window_title_label.configure(text=t("ui.window_title"))
+        self.typing_speed_label.configure(text=t("ui.typing_speed"))
+        self.language_label.configure(text=t("ui.language"))
+        
+        # Update commands frame and buttons
+        self.commands_frame.configure(text=t("ui.commands"))
+        self.add_button.configure(text=t("buttons.add_command"))
+        self.edit_button.configure(text=t("buttons.edit_command"))
+        self.delete_button.configure(text=t("buttons.delete_command"))
+        self.defaults_button.configure(text=t("buttons.load_defaults"))
+        
+        # Update treeview headers
+        self.commands_tree.heading("Text", text=t("table.command"))
+        self.commands_tree.heading("Interval", text=t("table.interval"))
+        self.commands_tree.heading("Status", text=t("table.status"))
+        
+        # Update control frame and buttons
+        self.control_frame.configure(text=t("ui.control"))
+        self.start_button.configure(text=t("buttons.start") if not self.running else t("buttons.stop"))
+        self.info_button.configure(text=t("ui.about"))
+        
+        # Update log frame
+        self.log_frame.configure(text=t("ui.activity_log"))
+        
+        # Update status message
+        if self.running:
+            self.status_var.set(t("messages.status_running"))
+        else:
+            self.status_var.set(t("messages.status_stopped"))
+        
+        # Refresh commands tree to update status text
+        self.refresh_commands_tree()
         
     def setup_key_listener(self):
         """Sets up the listener for the ¡ key"""
@@ -179,14 +303,14 @@ class AutoTextWriterGUI:
         self.key_listener.start()
         
     def load_default_commands(self):
-        """Loads default commands"""
+        """Loads default commands using translations"""
         self.text_configs = [
-            {"text": "Hello, this is a test message.", "interval_minutes": 5, "enabled": True},
-            {"text": "Reminder: check email.", "interval_minutes": 10, "enabled": True},
-            {"text": "Important note for later.", "interval_minutes": 15, "enabled": True}
+            {"text": t("defaults.test_message"), "interval_minutes": 5, "enabled": True},
+            {"text": t("defaults.reminder_message"), "interval_minutes": 10, "enabled": True},
+            {"text": t("defaults.note_message"), "interval_minutes": 15, "enabled": True}
         ]
         self.refresh_commands_tree()
-        self.log("Default commands loaded")
+        self.log(t("log.default_commands_loaded"))
         
     def refresh_commands_tree(self):
         """Updates the commands view"""
@@ -194,7 +318,7 @@ class AutoTextWriterGUI:
             self.commands_tree.delete(item)
             
         for i, config in enumerate(self.text_configs):
-            status = "✓ Active" if config.get('enabled', True) else "✗ Inactive"
+            status = t("table.active") if config.get('enabled', True) else t("table.inactive")
             self.commands_tree.insert('', 'end', iid=i, values=(
                 config['text'], 
                 config['interval_minutes'], 
@@ -209,7 +333,7 @@ class AutoTextWriterGUI:
         """Edits the selected command"""
         selection = self.commands_tree.selection()
         if not selection:
-            messagebox.showwarning("Warning", "Select a command to edit")
+            messagebox.showwarning(t("messages.warning"), t("messages.select_command_edit"))
             return
             
         index = int(selection[0])
@@ -220,19 +344,19 @@ class AutoTextWriterGUI:
         """Deletes the selected command"""
         selection = self.commands_tree.selection()
         if not selection:
-            messagebox.showwarning("Warning", "Select a command to delete")
+            messagebox.showwarning(t("messages.warning"), t("messages.select_command_delete"))
             return
             
-        if messagebox.askyesno("Confirm", "Delete the selected command?"):
+        if messagebox.askyesno(t("messages.confirm"), t("messages.confirm_delete")):
             index = int(selection[0])
             del self.text_configs[index]
             self.refresh_commands_tree()
-            self.log(f"Command deleted")
+            self.log(t("log.command_deleted"))
             
     def show_command_dialog(self, config=None, index=None):
         """Shows dialog to add/edit command"""
         dialog = tk.Toplevel(self.root)
-        dialog.title("Add Command" if config is None else "Edit Command")
+        dialog.title(t("dialogs.add_command_title") if config is None else t("dialogs.edit_command_title"))
         dialog.geometry("600x200")
         dialog.resizable(False, False)
         dialog.grab_set()
@@ -244,22 +368,22 @@ class AutoTextWriterGUI:
         frame.pack(fill=tk.BOTH, expand=True)
         
         # Command text
-        ttk.Label(frame, text="Command text:").grid(row=0, column=0, sticky=tk.W, pady=5)
+        ttk.Label(frame, text=t("dialogs.command_text")).grid(row=0, column=0, sticky=tk.W, pady=5)
         text_var = tk.StringVar(value=config['text'] if config else "")
         text_entry = ttk.Entry(frame, textvariable=text_var, width=40)
         text_entry.grid(row=0, column=1, pady=5, padx=(10, 0))
         text_entry.focus()
         
         # Interval
-        ttk.Label(frame, text="Interval (minutes):").grid(row=1, column=0, sticky=tk.W, pady=5)
+        ttk.Label(frame, text=t("dialogs.interval_minutes")).grid(row=1, column=0, sticky=tk.W, pady=5)
         interval_var = tk.IntVar(value=config['interval_minutes'] if config else 30)
         interval_spinbox = ttk.Spinbox(frame, from_=1, to=9999, textvariable=interval_var, width=10)
         interval_spinbox.grid(row=1, column=1, sticky=tk.W, pady=5, padx=(10, 0))
         
         # Status
-        ttk.Label(frame, text="Status:").grid(row=2, column=0, sticky=tk.W, pady=5)
+        ttk.Label(frame, text=t("dialogs.status_label")).grid(row=2, column=0, sticky=tk.W, pady=5)
         enabled_var = tk.BooleanVar(value=config.get('enabled', True) if config else True)
-        enabled_check = ttk.Checkbutton(frame, text="Enabled", variable=enabled_var)
+        enabled_check = ttk.Checkbutton(frame, text=t("dialogs.enabled"), variable=enabled_var)
         enabled_check.grid(row=2, column=1, sticky=tk.W, pady=5, padx=(10, 0))
         
         # Buttons
@@ -272,11 +396,11 @@ class AutoTextWriterGUI:
             enabled = enabled_var.get()
             
             if not text:
-                messagebox.showerror("Error", "Command text cannot be empty")
+                messagebox.showerror(t("messages.error"), t("messages.empty_command_text"))
                 return
                 
             if interval <= 0:
-                messagebox.showerror("Error", "Interval must be greater than 0")
+                messagebox.showerror(t("messages.error"), t("messages.invalid_interval"))
                 return
                 
             new_config = {
@@ -288,24 +412,27 @@ class AutoTextWriterGUI:
             if config is None:
                 # Add new
                 self.text_configs.append(new_config)
-                self.log(f"Command added: '{text}'")
+                self.log(f"{t('log.command_added')}: '{text}'")
             else:
                 # Edit existing
                 self.text_configs[index] = new_config
-                self.log(f"Command edited: '{text}'")
+                self.log(f"{t('log.command_edited')}: '{text}'")
                 
             self.refresh_commands_tree()
             dialog.destroy()
             
-        ttk.Button(buttons_frame, text="Save", command=save_command).pack(side=tk.LEFT, padx=(0, 10))
-        ttk.Button(buttons_frame, text="Cancel", command=dialog.destroy).pack(side=tk.LEFT)
+        ttk.Button(buttons_frame, text=t("buttons.save"), command=save_command).pack(side=tk.LEFT, padx=(0, 10))
+        ttk.Button(buttons_frame, text=t("buttons.cancel"), command=dialog.destroy).pack(side=tk.LEFT)
+        
+        # Apply theme to dialog
+        self.apply_theme_to_dialog(dialog)
         
     def show_about_dialog(self):
         """Shows dialog with author information - configurable dimensions"""
         dialog = tk.Toplevel(self.root)
-        dialog.title("About Windows Auto Text Writer")
+        dialog.title(t("dialogs.about_title"))
         
-        # Usar variables configurables para las dimensiones
+        # Use configurable variables for dimensions
         dialog.geometry(f"{self.about_dialog_width}x{self.about_dialog_height}")
         dialog.resizable(True, True)
         dialog.grab_set()
@@ -321,59 +448,44 @@ class AutoTextWriterGUI:
         main_frame.pack(fill=tk.BOTH, expand=True)
         
         # Logo/Title
-        title_label = ttk.Label(main_frame, text="Windows Auto Text Writer", 
+        title_label = ttk.Label(main_frame, text=t("app.title"), 
                                font=('Arial', 18, 'bold'))
         title_label.pack(pady=(0, 5))
         
-        version_label = ttk.Label(main_frame, text="Version 0.3", 
+        version_label = ttk.Label(main_frame, text=t("app.version"), 
                                  font=('Arial', 12), foreground='gray')
         version_label.pack(pady=(0, 25))
         
         # Author information
-        author_frame = ttk.LabelFrame(main_frame, text="Developer", padding="20")
+        author_frame = ttk.LabelFrame(main_frame, text=t("dialogs.developer"), padding="20")
         author_frame.pack(fill=tk.X, pady=(0, 20))
         
-        ttk.Label(author_frame, text="Author:", font=('Arial', 11, 'bold')).pack(anchor=tk.W)
+        ttk.Label(author_frame, text=t("dialogs.author"), font=('Arial', 11, 'bold')).pack(anchor=tk.W)
         ttk.Label(author_frame, text="JIATech", font=('Arial', 11)).pack(anchor=tk.W, padx=(20, 0), pady=(2, 0))
         
-        ttk.Label(author_frame, text="Email:", font=('Arial', 11, 'bold')).pack(anchor=tk.W, pady=(15, 0))
+        ttk.Label(author_frame, text=t("dialogs.email"), font=('Arial', 11, 'bold')).pack(anchor=tk.W, pady=(15, 0))
         email_label = ttk.Label(author_frame, text="johndev@jiacode.dev", font=('Arial', 11), 
                                foreground='blue', cursor='hand2')
         email_label.pack(anchor=tk.W, padx=(20, 0), pady=(2, 0))
         
         # Application information
-        info_frame = ttk.LabelFrame(main_frame, text="Application Information", padding="20")
+        info_frame = ttk.LabelFrame(main_frame, text=t("dialogs.app_info"), padding="20")
         info_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 20))
-        
-        info_text = """Text automator for Windows applications.
-
-Main features:
-
-• Global control with '¡' key (from any application)
-• Complete command management (add, edit, delete)
-• Individual command activation/deactivation
-• Configurable typing speed
-• Real-time log with timestamps
-• Immediate execution on startup + independent timers
-• Persistent configuration during session"""
         
         # Calculate wraplength based on window width
         wrap_width = self.about_dialog_width - 100
         
-        info_label = ttk.Label(info_frame, text=info_text, justify=tk.LEFT, 
+        info_label = ttk.Label(info_frame, text=t("dialogs.app_description"), justify=tk.LEFT, 
                               font=('Arial', 10), wraplength=wrap_width)
         info_label.pack(anchor=tk.W, fill=tk.BOTH, expand=True)
         
         # Close button
-        close_button = ttk.Button(main_frame, text="Close", command=dialog.destroy)
+        close_button = ttk.Button(main_frame, text=t("buttons.close"), command=dialog.destroy)
         close_button.pack(pady=(20, 0))
         
         # Apply theme to dialog
         self.apply_theme_to_dialog(dialog)
         
-        # Show current dimensions in log for debugging
-        self.log(f"'About' window opened: {self.about_dialog_width}x{self.about_dialog_height}")
-        self.log("To adjust: modify about_dialog_width and about_dialog_height in code")
     
     def setup_themes(self):
         """Configures light and dark themes"""
@@ -477,6 +589,14 @@ Main features:
                            foreground=theme['field_fg'],
                            borderwidth=1)
         
+        # Configure combobox styles
+        self.style.configure('TCombobox', 
+                           fieldbackground=theme['field_bg'],
+                           foreground=theme['field_fg'],
+                           borderwidth=1,
+                           arrowcolor=theme['field_fg'],
+                           buttonbackground=theme['field_bg'])
+        
         # Configure spinbox styles
         self.style.configure('TSpinbox', 
                            fieldbackground=theme['field_bg'],
@@ -568,13 +688,17 @@ Main features:
         """Switches between light and dark mode"""
         self.dark_mode = not self.dark_mode
         
+        # Save theme preference
+        theme_name = 'dark' if self.dark_mode else 'light'
+        self.config.set_theme(theme_name)
+        
         # Update button emoji
         if self.dark_mode:
             self.theme_button.configure(text="☀️")
-            self.log("Dark mode activated")
+            self.log(t("log.dark_mode_activated"))
         else:
             self.theme_button.configure(text="🌙")
-            self.log("Light mode activated")
+            self.log(t("log.light_mode_activated"))
         
         # Apply new theme
         self.apply_theme()
@@ -592,7 +716,7 @@ Main features:
     def start_execution(self):
         """Starts command execution"""
         if not self.text_configs:
-            messagebox.showwarning("Warning", "No commands configured")
+            messagebox.showwarning(t("messages.warning"), t("messages.no_commands"))
             return
             
         # Update configuration
@@ -600,30 +724,30 @@ Main features:
         self.typing_speed = self.typing_speed_var.get()
         
         if not self.window_title:
-            messagebox.showerror("Error", "Window title cannot be empty")
+            messagebox.showerror(t("messages.error"), t("messages.empty_window_title"))
             return
             
         self.running = True
-        self.start_button.configure(text="Stop (¡)", style='Red.TButton')
-        self.status_var.set("Running - Press '¡' to stop")
+        self.start_button.configure(text=t("buttons.stop"), style='Red.TButton')
+        self.status_var.set(t("messages.status_running"))
         
         # Start execution thread
         self.execution_thread = threading.Thread(target=self.execution_loop, daemon=True)
         self.execution_thread.start()
         
-        self.log(f"Started - Window: '{self.window_title}', Speed: {self.typing_speed}s")
+        self.log(f"{t('log.started')}: '{self.window_title}', {t('ui.typing_speed')} {self.typing_speed}s")
         
     def stop_execution(self):
         """Stops command execution"""
         self.running = False
-        self.start_button.configure(text="Start (¡)", style='Green.TButton')
-        self.status_var.set("Stopped - Press '¡' to start")
-        self.log("Execution stopped")
+        self.start_button.configure(text=t("buttons.start"), style='Green.TButton')
+        self.status_var.set(t("messages.status_stopped"))
+        self.log(t("log.execution_stopped"))
         
     def execution_loop(self):
         """Main execution loop"""
         # Execute enabled commands immediately
-        self.log("=== INITIAL EXECUTION ===")
+        self.log(t("log.initial_execution"))
         for config in self.text_configs:
             if not self.running:
                 break
@@ -631,10 +755,10 @@ Main features:
                 self.execute_text_write(config)
                 time.sleep(2)
             else:
-                self.log(f"Skipping disabled command: {config['text']}")
+                self.log(f"{t('log.skipping_disabled')}: {config['text']}")
         
         if self.running:
-            self.log("=== INITIAL EXECUTION COMPLETED ===")
+            self.log(t("log.initial_completed"))
         
         # Initialize next executions
         now = datetime.now()
@@ -665,22 +789,22 @@ Main features:
                 
     def execute_text_write(self, config):
         """Executes text writing for a command"""
-        self.log(f"Executing: {config['text']}")
+        self.log(f"{t('log.executing')}: {config['text']}")
         
         window = self.find_window()
         if not window:
-            self.log(f"ERROR: Window '{self.window_title}' not found")
+            self.log(t("log.window_not_found", self.window_title))
             return False
             
         if not self.focus_window(window):
-            self.log("ERROR: Could not focus window")
+            self.log(t("log.error_focus_window"))
             return False
             
         if self.write_text(config['text']):
-            self.log(f"✓ Command executed: {config['text']}")
+            self.log(f"{t('log.command_executed')}: {config['text']}")
             return True
         else:
-            self.log(f"✗ Error executing: {config['text']}")
+            self.log(f"{t('log.error_executing')}: {config['text']}")
             return False
             
     def find_window(self):
@@ -704,26 +828,26 @@ Main features:
                 visible_windows = [w for w in matching_windows if w.visible]
                 if visible_windows:
                     if len(visible_windows) > 1:
-                        self.log(f"WARNING: {len(visible_windows)} windows found with '{self.window_title}':")
+                        self.log(t("log.multiple_windows_warning", len(visible_windows), self.window_title))
                         for i, w in enumerate(visible_windows):
                             self.log(f"  {i+1}. '{w.title}'")
-                        self.log(f"Using first: '{visible_windows[0].title}'")
+                        self.log(t("log.using_first", visible_windows[0].title))
                     else:
-                        self.log(f"Window found by partial match: '{visible_windows[0].title}'")
+                        self.log(t("log.window_found_partial", visible_windows[0].title))
                     return visible_windows[0]
                 else:
                     if len(matching_windows) > 1:
-                        self.log(f"WARNING: {len(matching_windows)} windows found with '{self.window_title}' (not visible):")
+                        self.log(t("log.multiple_windows_warning", len(matching_windows), self.window_title) + " (not visible):")
                         for i, w in enumerate(matching_windows):
                             self.log(f"  {i+1}. '{w.title}'")
-                        self.log(f"Using first: '{matching_windows[0].title}'")
+                        self.log(t("log.using_first", matching_windows[0].title))
                     else:
-                        self.log(f"Window found by partial match: '{matching_windows[0].title}'")
+                        self.log(t("log.window_found_partial", matching_windows[0].title))
                     return matching_windows[0]
             
             return None
         except Exception as e:
-            self.log(f"Error searching for window: {e}")
+            self.log(t("log.error_searching_window", str(e)))
             return None
             
     def focus_window(self, window):
@@ -735,7 +859,7 @@ Main features:
             time.sleep(1)
             return True
         except Exception as e:
-            self.log(f"Error focusing window: {e}")
+            self.log(t("log.error_focusing_window", str(e)))
             return False
             
     def write_text(self, text):
@@ -756,7 +880,7 @@ Main features:
             pyautogui.press('enter')
             return True
         except Exception as e:
-            self.log(f"Error writing text: {e}")
+            self.log(t("log.error_writing_text", str(e)))
             return False
             
     def update_status_display(self):
@@ -774,7 +898,7 @@ Main features:
                 status_info.append(f"'{config['text']}' en {minutes_left}min")
                 
         if status_info:
-            self.log(f"Next executions: {' | '.join(status_info)}")
+            self.log(f"{t('log.next_executions')}: {' | '.join(status_info)}")
             
     def log(self, message):
         """Adds message to log"""
@@ -814,6 +938,7 @@ def main():
         app = AutoTextWriterGUI()
         app.run()
     except Exception as e:
+        # Use fallback text since i18n might not be available during startup errors
         messagebox.showerror("Fatal Error", f"Error starting application:\n{e}")
         sys.exit(1)
 

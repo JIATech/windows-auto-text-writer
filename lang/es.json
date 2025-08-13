@@ -1,0 +1,96 @@
+{
+  "app": {
+    "title": "Windows Auto Text Writer v0.4",
+    "version": "Versión 0.4"
+  },
+  "ui": {
+    "configuration": "Configuración",
+    "window_title": "Título de ventana (parcial):",
+    "typing_speed": "Velocidad (seg/char):",
+    "commands": "Comandos",
+    "control": "Control",
+    "activity_log": "Registro de Actividad",
+    "language": "Idioma:",
+    "about": "Acerca de"
+  },
+  "buttons": {
+    "add_command": "Agregar Comando",
+    "edit_command": "Editar Comando",
+    "delete_command": "Eliminar Comando",
+    "load_defaults": "Cargar Defaults",
+    "start": "Iniciar (¡)",
+    "stop": "Detener (¡)",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar"
+  },
+  "table": {
+    "command": "Comando",
+    "interval": "Intervalo (min)",
+    "status": "Estado",
+    "active": "✓ Activo",
+    "inactive": "✗ Inactivo"
+  },
+  "dialogs": {
+    "add_command_title": "Agregar Comando",
+    "edit_command_title": "Editar Comando",
+    "command_text": "Texto del comando:",
+    "interval_minutes": "Intervalo (minutos):",
+    "status_label": "Estado:",
+    "enabled": "Activado",
+    "about_title": "Acerca de Windows Auto Text Writer",
+    "developer": "Desarrollador",
+    "author": "Autor:",
+    "email": "Email:",
+    "app_info": "Información de la Aplicación",
+    "app_description": "Automatizador de texto para aplicaciones Windows.\n\nCaracterísticas principales:\n\n• Control global con tecla '¡' (desde cualquier aplicación)\n• Gestión completa de textos (agregar, editar, eliminar)\n• Activación/desactivación individual de comandos\n• Velocidad de escritura configurable\n• Registro en tiempo real con timestamps\n• Ejecución inmediata al inicio + temporizadores independientes\n• Configuración persistente durante la sesión"
+  },
+  "messages": {
+    "status_stopped": "Detenido - Presiona '¡' para iniciar",
+    "status_running": "Ejecutándose - Presiona '¡' para detener",
+    "warning": "Advertencia",
+    "error": "Error",
+    "confirm": "Confirmar",
+    "select_command_edit": "Selecciona un comando para editar",
+    "select_command_delete": "Selecciona un comando para eliminar",
+    "confirm_delete": "¿Eliminar el comando seleccionado?",
+    "no_commands": "No hay comandos configurados",
+    "empty_window_title": "El título de ventana no puede estar vacío",
+    "empty_command_text": "El texto del comando no puede estar vacío",
+    "invalid_interval": "El intervalo debe ser mayor que 0"
+  },
+  "log": {
+    "default_commands_loaded": "Comandos por defecto cargados",
+    "command_added": "Comando agregado",
+    "command_edited": "Comando editado",
+    "command_deleted": "Comando eliminado",
+    "dark_mode_activated": "Modo oscuro activado",
+    "light_mode_activated": "Modo claro activado",
+    "started": "Iniciado - Ventana",
+    "execution_stopped": "Ejecución detenida",
+    "executing": "Ejecutando",
+    "next_executions": "Próximas ejecuciones",
+    "skipping_disabled": "Omitiendo comando desactivado",
+    "initial_execution": "=== EJECUCIÓN INICIAL ===",
+    "initial_completed": "=== EJECUCIÓN INICIAL COMPLETADA ===",
+    "command_executed": "✓ Comando ejecutado",
+    "error_executing": "✗ Error ejecutando",
+    "window_not_found": "ERROR: Ventana '{0}' no encontrada",
+    "error_focus_window": "ERROR: No se pudo enfocar la ventana",
+    "window_found_partial": "Ventana encontrada por coincidencia parcial: '{0}'",
+    "multiple_windows_warning": "ADVERTENCIA: {0} ventanas encontradas con '{1}':",
+    "using_first": "Usando la primera: '{0}'",
+    "error_searching_window": "Error buscando ventana: {0}",
+    "error_focusing_window": "Error enfocando ventana: {0}",
+    "error_writing_text": "Error escribiendo texto: {0}",
+    "about_window_opened": "Ventana 'Acerca de' abierta: {0}x{1}",
+    "about_adjust_tip": "Para ajustar: modifica about_dialog_width y about_dialog_height en el código",
+    "language_changed": "Idioma cambiado a Español"
+  },
+  "defaults": {
+    "window_title": "Bloc de notas",
+    "test_message": "Hola, este es un mensaje de prueba.",
+    "reminder_message": "Recordatorio: revisar el correo electrónico.",
+    "note_message": "Nota importante para más tarde."
+  }
+}

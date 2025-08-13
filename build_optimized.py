@@ -25,6 +25,7 @@ def build_safe_optimized():
         print(f"Construyendo {output_name}...")
         
         # Comando PyInstaller con optimizaciones SEGURAS
+        # Base command
         cmd = [
             sys.executable, "-m", "PyInstaller",
             "--onefile",                    # Un solo archivo
@@ -36,7 +37,20 @@ def build_safe_optimized():
             
             # SOLO optimizaciones seguras
             "--noupx",                      # No usar UPX
-            
+        ]
+        
+        # Add GUI-specific files if building GUI version
+        if "GUI" in output_name:
+            cmd.extend([
+                "--add-data", "i18n.py;.",
+                "--add-data", "config.py;.",
+                "--add-data", "lang;lang",
+                "--hidden-import", "json",
+                "--hidden-import", "pathlib",
+            ])
+        
+        # Add common exclusions
+        cmd.extend([
             # Excluir SOLO módulos que estamos seguros no se usan
             "--exclude-module", "matplotlib",
             "--exclude-module", "numpy", 
@@ -48,7 +62,7 @@ def build_safe_optimized():
             "--exclude-module", "torch",
             
             script_file
-        ]
+        ])
         
         try:
             result = subprocess.run(cmd, capture_output=True, text=True)

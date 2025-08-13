@@ -1,0 +1,96 @@
+{
+  "app": {
+    "title": "Windows Auto Text Writer v0.4",
+    "version": "Version 0.4"
+  },
+  "ui": {
+    "configuration": "Configuration",
+    "window_title": "Window title (partial):",
+    "typing_speed": "Speed (sec/char):",
+    "commands": "Commands",
+    "control": "Control",
+    "activity_log": "Activity Log",
+    "language": "Language:",
+    "about": "About"
+  },
+  "buttons": {
+    "add_command": "Add Command",
+    "edit_command": "Edit Command",
+    "delete_command": "Delete Command",
+    "load_defaults": "Load Defaults",
+    "start": "Start (¡)",
+    "stop": "Stop (¡)",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "table": {
+    "command": "Command",
+    "interval": "Interval (min)",
+    "status": "Status",
+    "active": "✓ Active",
+    "inactive": "✗ Inactive"
+  },
+  "dialogs": {
+    "add_command_title": "Add Command",
+    "edit_command_title": "Edit Command",
+    "command_text": "Command text:",
+    "interval_minutes": "Interval (minutes):",
+    "status_label": "Status:",
+    "enabled": "Enabled",
+    "about_title": "About Windows Auto Text Writer",
+    "developer": "Developer",
+    "author": "Author:",
+    "email": "Email:",
+    "app_info": "Application Information",
+    "app_description": "Text automator for Windows applications.\n\nMain features:\n\n• Global control with '¡' key (from any application)\n• Complete texts management (add, edit, delete)\n• Individual command activation/deactivation\n• Configurable typing speed\n• Real-time log with timestamps\n• Immediate execution on startup + independent timers\n• Persistent configuration during session"
+  },
+  "messages": {
+    "status_stopped": "Stopped - Press '¡' to start",
+    "status_running": "Running - Press '¡' to stop",
+    "warning": "Warning",
+    "error": "Error",
+    "confirm": "Confirm",
+    "select_command_edit": "Select a command to edit",
+    "select_command_delete": "Select a command to delete",
+    "confirm_delete": "Delete the selected command?",
+    "no_commands": "No commands configured",
+    "empty_window_title": "Window title cannot be empty",
+    "empty_command_text": "Command text cannot be empty",
+    "invalid_interval": "Interval must be greater than 0"
+  },
+  "log": {
+    "default_commands_loaded": "Default commands loaded",
+    "command_added": "Command added",
+    "command_edited": "Command edited",
+    "command_deleted": "Command deleted",
+    "dark_mode_activated": "Dark mode activated",
+    "light_mode_activated": "Light mode activated",
+    "started": "Started - Window",
+    "execution_stopped": "Execution stopped",
+    "executing": "Executing",
+    "next_executions": "Next executions",
+    "skipping_disabled": "Skipping disabled command",
+    "initial_execution": "=== INITIAL EXECUTION ===",
+    "initial_completed": "=== INITIAL EXECUTION COMPLETED ===",
+    "command_executed": "✓ Command executed",
+    "error_executing": "✗ Error executing",
+    "window_not_found": "ERROR: Window '{0}' not found",
+    "error_focus_window": "ERROR: Could not focus window",
+    "window_found_partial": "Window found by partial match: '{0}'",
+    "multiple_windows_warning": "WARNING: {0} windows found with '{1}':",
+    "using_first": "Using first: '{0}'",
+    "error_searching_window": "Error searching for window: {0}",
+    "error_focusing_window": "Error focusing window: {0}",
+    "error_writing_text": "Error writing text: {0}",
+    "about_window_opened": "'About' window opened: {0}x{1}",
+    "about_adjust_tip": "To adjust: modify about_dialog_width and about_dialog_height in code",
+    "language_changed": "Language changed to English"
+  },
+  "defaults": {
+    "window_title": "Notepad",
+    "test_message": "Hello, this is a test message.",
+    "reminder_message": "Reminder: check email.",
+    "note_message": "Important note for later."
+  }
+}

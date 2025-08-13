@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is **Windows Auto Text Writer**, a Python automation tool for sending predetermined text commands to Windows applications at configurable intervals. The project has two main versions:
 
 - **v0.1 (Console)**: `auto_text_writer.py` - Command-line interface with interactive configuration
-- **v0.3 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes, advanced text management, and complete English translation
+- **v0.4 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes, advanced text management, and complete multi-language support (English/Spanish with intelligent switching)
 
 ## Core Architecture
 
@@ -21,15 +21,18 @@ This is **Windows Auto Text Writer**, a Python automation tool for sending prede
 
 2. **AutoTextWriterGUI Class** (`auto_text_writer_gui.py`): Complete GUI implementation
    - Advanced theming system (dark/light modes)
+   - Multi-language support (English/Spanish) with live switching
    - Real-time command management (add/edit/delete/enable/disable)
    - Global hotkey support ('¡' key for start/stop)
    - Live activity logging with timestamps
-   - Persistent configuration during session
+   - Persistent configuration (language, theme, settings)
 
 ### Key Technical Patterns
 
 - **Threading**: GUI uses separate execution thread to prevent UI blocking
 - **Window Management**: Uses `pygetwindow` for window detection, `pyautogui` for automation
+- **Internationalization**: JSON-based i18n system with live language switching and persistent settings
+- **Configuration Management**: JSON configuration system for persistent user preferences
 - **Theme System**: Comprehensive ttk.Style configuration for both themes with hover effect removal
 - **Text Execution**: Character-by-character typing with configurable speed for any text application
 
@@ -61,8 +64,15 @@ python build_optimized.py
 
 ### Build Outputs
 - `dist/WindowsAutoText_v0.1.exe` - Console version (~67MB)
-- `dist/WindowsAutoText_GUI.exe` - GUI version (~67MB)
+- `dist/WindowsAutoText_GUI.exe` - GUI version (~70MB, includes i18n system)
 - `dist_safe/WindowsAutoText_*_Safe.exe` - Size-optimized builds
+
+### Included in GUI Executable
+- Complete internationalization system (`i18n.py`)
+- Configuration management system (`config.py`)
+- All language files (`lang/en.json`, `lang/es.json`)
+- Fallback language support for missing files
+- No external dependencies required
 
 ## Configuration
 
@@ -97,4 +107,9 @@ Uses `pynput` for system-wide '¡' key detection with proper thread safety via `
 ## File Structure Context
 - `requirements.txt`: Minimal dependencies (pyautogui, pygetwindow, pynput)
 - `build_*.py`: PyInstaller automation scripts with different optimization levels
+- `i18n.py`: Internationalization system with multi-language support
+- `config.py`: Configuration management for persistent user settings
+- `lang/`: Language files directory with JSON translation files
+  - `en.json`: English translations
+  - `es.json`: Spanish translations
 - `.gitignore`: Comprehensive exclusions for Python builds, IDEs, and temporary files
