@@ -31,8 +31,23 @@ class AutoTextWriterGUI:
         # State variables
         self.running = False
         self.text_configs = []
-        self.typing_speed = self.config.get('typing_speed', 0.2)
-        self.window_title = t("defaults.window_title")
+        
+        # Load saved configuration
+        saved_commands = self.config.get_text_commands()
+        saved_window_title = self.config.get_window_title()
+        saved_typing_speed = self.config.get_typing_speed()
+        
+        # Apply saved settings or use defaults
+        self.typing_speed = saved_typing_speed
+        self.window_title = saved_window_title if saved_window_title else t("defaults.window_title")
+        
+        # Load saved text commands if available
+        if saved_commands:
+            self.text_configs = saved_commands
+            self.log(t("log.config_loaded"))
+        
+        # Flag to track if we should load defaults
+        self.should_load_defaults = not saved_commands
         
         # About dialog dimensions configuration
         self.about_dialog_width = 600
@@ -50,7 +65,12 @@ class AutoTextWriterGUI:
         self.key_listener = None
         
         self.setup_ui()
-        self.load_default_commands()
+        # Only load defaults if no saved commands exist
+        if self.should_load_defaults:
+            self.load_default_commands()
+        else:
+            # Refresh the tree to show loaded commands
+            self.refresh_commands_tree()
         self.setup_key_listener()
         
     def setup_ui(self):
@@ -84,6 +104,8 @@ class AutoTextWriterGUI:
         self.window_title_var = tk.StringVar(value=self.window_title)
         self.window_entry = ttk.Entry(self.config_frame, textvariable=self.window_title_var, width=40)
         self.window_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=2, padx=(10, 0))
+        # Bind event to track window title changes
+        self.window_title_var.trace_add('write', self.on_window_title_changed)
         
         # Typing speed
         self.typing_speed_label = ttk.Label(self.config_frame, text=t("ui.typing_speed"))
@@ -92,6 +114,8 @@ class AutoTextWriterGUI:
         self.speed_spinbox = ttk.Spinbox(self.config_frame, from_=0.01, to=10.0, increment=0.1, 
                                         textvariable=self.typing_speed_var, width=10)
         self.speed_spinbox.grid(row=1, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+        # Bind event to track typing speed changes
+        self.typing_speed_var.trace_add('write', self.on_typing_speed_changed)
         
         # Language selector
         self.language_label = ttk.Label(self.config_frame, text=t("ui.language"))
@@ -109,6 +133,20 @@ class AutoTextWriterGUI:
         
         # Bind language change event
         self.language_combo.bind('<<ComboboxSelected>>', self.on_language_changed)
+        
+        # Auto-save checkbox
+        self.auto_save_label = ttk.Label(self.config_frame, text=t("ui.auto_save"))
+        self.auto_save_label.grid(row=3, column=0, sticky=tk.W, pady=2)
+        self.auto_save_var = tk.BooleanVar(value=self.config.get_auto_save())
+        self.auto_save_check = ttk.Checkbutton(self.config_frame, variable=self.auto_save_var)
+        self.auto_save_check.grid(row=3, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+        # Bind auto-save change event
+        self.auto_save_var.trace_add('write', self.on_auto_save_changed)
+        
+        # Manual save button
+        self.save_button = ttk.Button(self.config_frame, text=t("buttons.save"), 
+                                     command=self.manual_save)
+        self.save_button.grid(row=4, column=1, sticky=tk.W, pady=2, padx=(10, 0))
         
         # Commands frame
         self.commands_frame = ttk.LabelFrame(main_frame, text=t("ui.commands"), padding="10")
@@ -248,6 +286,44 @@ class AutoTextWriterGUI:
             # Log the change
             self.log(t("log.language_changed"))
     
+    def on_window_title_changed(self, *args):
+        """Handle window title changes"""
+        if hasattr(self, 'config'):  # Ensure config is initialized
+            new_title = self.window_title_var.get().strip()
+            should_auto_save = self.config.get_auto_save()
+            self.config.set_window_title(new_title, auto_save=should_auto_save)
+            self.window_title = new_title
+            if not should_auto_save:
+                self.config.mark_changed()
+    
+    def on_typing_speed_changed(self, *args):
+        """Handle typing speed changes"""
+        if hasattr(self, 'config'):  # Ensure config is initialized
+            try:
+                new_speed = self.typing_speed_var.get()
+                should_auto_save = self.config.get_auto_save()
+                self.config.set_typing_speed(new_speed, auto_save=should_auto_save)
+                self.typing_speed = new_speed
+                if not should_auto_save:
+                    self.config.mark_changed()
+            except tk.TclError:
+                # Ignore invalid values during typing
+                pass
+    
+    def on_auto_save_changed(self, *args):
+        """Handle auto-save preference changes"""
+        if hasattr(self, 'config'):  # Ensure config is initialized
+            new_auto_save = self.auto_save_var.get()
+            self.config.set_auto_save(new_auto_save)  # This always saves immediately
+            self.log(f"Auto-save {'enabled' if new_auto_save else 'disabled'}")
+    
+    def manual_save(self):
+        """Handle manual save button click"""
+        if self.config.save_config():
+            self.log(t("log.config_saved"))
+        else:
+            messagebox.showerror(t("messages.error"), "Failed to save configuration")
+    
     def refresh_ui(self):
         """Refresh all UI text after language change"""
         # Update main window title
@@ -259,6 +335,8 @@ class AutoTextWriterGUI:
         self.window_title_label.configure(text=t("ui.window_title"))
         self.typing_speed_label.configure(text=t("ui.typing_speed"))
         self.language_label.configure(text=t("ui.language"))
+        self.auto_save_label.configure(text=t("ui.auto_save"))
+        self.save_button.configure(text=t("buttons.save"))
         
         # Update commands frame and buttons
         self.commands_frame.configure(text=t("ui.commands"))
@@ -312,6 +390,15 @@ class AutoTextWriterGUI:
         self.refresh_commands_tree()
         self.log(t("log.default_commands_loaded"))
         
+        # Save the default commands based on auto-save preference
+        should_auto_save = self.config.get_auto_save()
+        if should_auto_save:
+            self.config.set_text_commands(self.text_configs, auto_save=True)
+            self.log(t("log.config_saved"))
+        else:
+            self.config.set_text_commands(self.text_configs, auto_save=False)
+            self.config.mark_changed()
+        
     def refresh_commands_tree(self):
         """Updates the commands view"""
         for item in self.commands_tree.get_children():
@@ -352,6 +439,15 @@ class AutoTextWriterGUI:
             del self.text_configs[index]
             self.refresh_commands_tree()
             self.log(t("log.command_deleted"))
+            
+            # Save the changes based on auto-save preference
+            should_auto_save = self.config.get_auto_save()
+            if should_auto_save:
+                self.config.set_text_commands(self.text_configs, auto_save=True)
+                self.log(t("log.config_saved"))
+            else:
+                self.config.set_text_commands(self.text_configs, auto_save=False)
+                self.config.mark_changed()
             
     def show_command_dialog(self, config=None, index=None):
         """Shows dialog to add/edit command"""
@@ -419,6 +515,16 @@ class AutoTextWriterGUI:
                 self.log(f"{t('log.command_edited')}: '{text}'")
                 
             self.refresh_commands_tree()
+            
+            # Save the changes based on auto-save preference
+            should_auto_save = self.config.get_auto_save()
+            if should_auto_save:
+                self.config.set_text_commands(self.text_configs, auto_save=True)
+                self.log(t("log.config_saved"))
+            else:
+                self.config.set_text_commands(self.text_configs, auto_save=False)
+                self.config.mark_changed()
+            
             dialog.destroy()
             
         ttk.Button(buttons_frame, text=t("buttons.save"), command=save_command).pack(side=tk.LEFT, padx=(0, 10))
@@ -920,6 +1026,25 @@ class AutoTextWriterGUI:
             
     def on_closing(self):
         """Handles application closure"""
+        # Check for unsaved changes if confirm_on_exit is enabled and auto-save is disabled
+        if (self.config.get_confirm_on_exit() and 
+            not self.config.get_auto_save() and 
+            self.config.has_changes()):
+            # Show save confirmation dialog
+            result = self.show_save_confirmation_dialog()
+            
+            if result == "cancel":
+                return  # Don't close the application
+            elif result == "save":
+                # Save configuration before closing
+                if self.config.save_config():
+                    self.log(t("log.config_saved"))
+                else:
+                    # If save failed, ask user if they still want to exit
+                    if not messagebox.askyesno(t("messages.error"), 
+                                             "Failed to save configuration. Exit anyway?"):
+                        return
+        
         if self.running:
             self.stop_execution()
             
@@ -927,6 +1052,68 @@ class AutoTextWriterGUI:
             self.key_listener.stop()
             
         self.root.destroy()
+    
+    def show_save_confirmation_dialog(self):
+        """Shows save confirmation dialog and returns user choice"""
+        dialog = tk.Toplevel(self.root)
+        dialog.title(t("log.save_changes_title"))
+        dialog.geometry("400x150")
+        dialog.resizable(False, False)
+        dialog.grab_set()
+        dialog.transient(self.root)
+        
+        # Center the dialog
+        x_offset = (self.root.winfo_width() - 400) // 2
+        y_offset = (self.root.winfo_height() - 150) // 2
+        dialog.geometry(f"+{self.root.winfo_rootx() + x_offset}+{self.root.winfo_rooty() + y_offset}")
+        
+        # Result variable
+        self.dialog_result = "cancel"
+        
+        frame = ttk.Frame(dialog, padding="20")
+        frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Message
+        message_label = ttk.Label(frame, text=t("log.save_changes_message"), 
+                                 wraplength=350, justify=tk.CENTER)
+        message_label.pack(pady=(0, 20))
+        
+        # Buttons frame
+        buttons_frame = ttk.Frame(frame)
+        buttons_frame.pack()
+        
+        def save_and_exit():
+            self.dialog_result = "save"
+            dialog.destroy()
+            
+        def exit_without_saving():
+            self.dialog_result = "exit"
+            dialog.destroy()
+            
+        def cancel():
+            self.dialog_result = "cancel"
+            dialog.destroy()
+        
+        # Buttons
+        save_btn = ttk.Button(buttons_frame, text=t("log.save_and_exit"), 
+                             command=save_and_exit, style='Green.TButton')
+        save_btn.pack(side=tk.LEFT, padx=(0, 10))
+        
+        exit_btn = ttk.Button(buttons_frame, text=t("log.exit_without_saving"), 
+                             command=exit_without_saving)
+        exit_btn.pack(side=tk.LEFT, padx=(0, 10))
+        
+        cancel_btn = ttk.Button(buttons_frame, text=t("log.cancel"), 
+                               command=cancel)
+        cancel_btn.pack(side=tk.LEFT)
+        
+        # Apply theme to dialog
+        self.apply_theme_to_dialog(dialog)
+        
+        # Wait for dialog to close
+        dialog.wait_window()
+        
+        return self.dialog_result
         
     def run(self):
         """Runs the application"""

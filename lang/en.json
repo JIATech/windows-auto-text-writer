@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "Windows Auto Text Writer v0.4",
-    "version": "Version 0.4"
+    "title": "Windows Auto Text Writer v0.5",
+    "version": "Version 0.5"
   },
   "ui": {
     "configuration": "Configuration",
@@ -11,6 +11,8 @@
     "control": "Control",
     "activity_log": "Activity Log",
     "language": "Language:",
+    "auto_save": "Auto-save:",
+    "auto_save_enabled": "Enabled",
     "about": "About"
   },
   "buttons": {
@@ -85,7 +87,14 @@
     "error_writing_text": "Error writing text: {0}",
     "about_window_opened": "'About' window opened: {0}x{1}",
     "about_adjust_tip": "To adjust: modify about_dialog_width and about_dialog_height in code",
-    "language_changed": "Language changed to English"
+    "language_changed": "Language changed to English",
+    "config_saved": "Configuration saved successfully",
+    "config_loaded": "Configuration loaded from previous session",
+    "save_changes_title": "Save Changes?",
+    "save_changes_message": "You have unsaved changes. Do you want to save them before closing?",
+    "save_and_exit": "Save & Exit",
+    "exit_without_saving": "Exit Without Saving",
+    "cancel": "Cancel"
   },
   "defaults": {
     "window_title": "Notepad",

@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is **Windows Auto Text Writer**, a Python automation tool for sending predetermined text commands to Windows applications at configurable intervals. The project has two main versions:
 
 - **v0.1 (Console)**: `auto_text_writer.py` - Command-line interface with interactive configuration
-- **v0.4 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes, advanced text management, and complete multi-language support (English/Spanish with intelligent switching)
+- **v0.5 (GUI)**: `auto_text_writer_gui.py` - Full tkinter GUI with dark/light themes, advanced text management, complete multi-language support (English/Spanish), configurable auto-save feature, and polished user interface
 
 ## Core Architecture
 
@@ -25,14 +25,16 @@ This is **Windows Auto Text Writer**, a Python automation tool for sending prede
    - Real-time command management (add/edit/delete/enable/disable)
    - Global hotkey support ('¡' key for start/stop)
    - Live activity logging with timestamps
-   - Persistent configuration (language, theme, settings)
+   - Complete session persistence with configurable auto-save
+   - Smart exit confirmation for unsaved changes
+   - Manual save control with immediate user feedback
 
 ### Key Technical Patterns
 
 - **Threading**: GUI uses separate execution thread to prevent UI blocking
 - **Window Management**: Uses `pygetwindow` for window detection, `pyautogui` for automation
 - **Internationalization**: JSON-based i18n system with live language switching and persistent settings
-- **Configuration Management**: JSON configuration system for persistent user preferences
+- **Configuration Management**: JSON configuration system with Windows AppData storage, automatic migration, and configurable auto-save
 - **Theme System**: Comprehensive ttk.Style configuration for both themes with hover effect removal
 - **Text Execution**: Character-by-character typing with configurable speed for any text application
 

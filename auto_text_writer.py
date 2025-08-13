@@ -89,7 +89,7 @@ class WindowTextWriter:
         """Starts the continuous process with multiple threads for different intervals"""
         self.running = True
         print("=" * 50)
-        print("    MU AUTO TEXT WRITER v0.1 - STARTING")
+        print("    WINDOWS AUTO TEXT WRITER v0.1 - STARTING")
         print("=" * 50)
         print(f"Target window: {self.window_title}")
         print(f"Configured texts: {len(self.text_configs)}")
@@ -162,7 +162,7 @@ class WindowTextWriter:
 def get_user_configuration():
     """Requests complete configuration from user with default values"""
     print("=" * 60)
-    print("    COMPLETE CONFIGURATION - MU AUTO TEXT WRITER v0.1")
+    print("    COMPLETE CONFIGURATION - WINDOWS AUTO TEXT WRITER v0.1")
     print("=" * 60)
     print("    Developed by JIATech - johndev@jiacode.dev")
     print("=" * 60)
@@ -171,12 +171,12 @@ def get_user_configuration():
     print()
     
     # Default configuration
-    default_window = "MU La Plata 99B"
+    default_window = "Notepad"
     default_speed = 0.5
     default_commands = [
-        {"text": "/attack on", "interval_minutes": 91, "enabled": True},
-        {"text": "/pickjewel on", "interval_minutes": 31, "enabled": True}, 
-        {"text": "/party on", "interval_minutes": 32, "enabled": True}
+        {"text": "Text 1", "interval_minutes": 91, "enabled": True},
+        {"text": "Text 2", "interval_minutes": 31, "enabled": True}, 
+        {"text": "Text 3", "interval_minutes": 32, "enabled": True}
     ]
     
     try:

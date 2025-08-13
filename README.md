@@ -8,12 +8,13 @@ Windows automation tool that sends predetermined text commands to applications a
 
 ## 🚀 Features
 
-- **Two versions available**: Console (v0.1) and GUI (v0.4)
+- **Two versions available**: Console (v0.1) and GUI (v0.5)
 - **Automatic writing**: Character-by-character text with configurable speed
 - **Multiple commands**: Each command with its own independent timer
 - **Global control**: Hotkey ('¡') from any application
-- **Modern interface**: GUI with dark/light mode
+- **Modern interface**: GUI with dark/light mode and multi-language support
 - **Complete management**: Add, edit, delete and enable/disable commands
+- **Session persistence**: All settings automatically saved between sessions
 - **Real-time logging**: Activity log with timestamps
 - **Standalone executables**: No Python installation required
 
@@ -54,7 +55,7 @@ python auto_text_writer_gui.py      # GUI version
 
 ## 🎮 Usage
 
-### GUI Version (v0.4) - Recommended
+### GUI Version (v0.5) - Recommended
 
 1. **Language selection**:
    - Choose between English and Spanish
@@ -64,6 +65,7 @@ python auto_text_writer_gui.py      # GUI version
 2. **Initial configuration**:
    - Target window title (partial matching supported)
    - Writing speed (seconds between characters, default: 0.2s)
+   - Auto-save toggle (enabled by default)
 
 3. **Text management**:
    - Add custom texts
@@ -76,6 +78,10 @@ python auto_text_writer_gui.py      # GUI version
    - Then continues with independent timers
 
 5. **Additional features**:
+   - Complete session persistence (all settings saved automatically)
+   - Configurable auto-save (can be enabled/disabled by user)
+   - Smart exit confirmation (asks to save unsaved changes when auto-save is off)
+   - Manual save button for users who prefer manual control
    - Dark/light mode with toggle button
    - Real-time log with translated messages
    - Multi-language "About" dialog
@@ -106,7 +112,7 @@ Executables are generated in `dist/` and `dist_safe/` folders.
 
 ```
 ├── auto_text_writer.py       # Console version (v0.1)
-├── auto_text_writer_gui.py   # GUI version (v0.4)
+├── auto_text_writer_gui.py   # GUI version (v0.5)
 ├── i18n.py                  # Internationalization system
 ├── config.py                # Configuration management
 ├── lang/                    # Language files directory
@@ -164,20 +170,28 @@ This project is under the MIT License. See the [LICENSE](LICENSE) file for more 
 
 ## 📋 Version history
 
-### v0.4 (Current)
+### v0.5 (Current)
+- ✅ **Complete session persistence**: All user settings, texts, and preferences saved automatically
+- ✅ **Configurable auto-save**: Users can enable/disable automatic saving with toggle in Configuration
+- ✅ **Smart exit confirmation**: Intelligent dialog asks to save unsaved changes (when auto-save disabled)
+- ✅ **Manual save control**: Save button allows users to save changes manually when needed
+- ✅ **Enhanced UI polish**: Fixed visual issues with checkbox display (no more confusing "1/0" values)
 - ✅ **Complete multi-language support**: English/Spanish with intelligent language switching
 - ✅ **Smart localization**: Default content adapts automatically, preserves custom user input
-- ✅ **Persistent preferences**: Language and theme settings saved automatically
+- ✅ **Enhanced configuration system**: Robust settings management with automatic migration
 - ✅ **Intelligent UI updates**: Live language switching without losing user configuration
 - ✅ **Enhanced window search**: Supports partial title matching with smart detection
 - ✅ **Optimized performance**: Faster typing speed (0.2s) and universal text examples
 
-### v0.3
+### v0.4
 - ✅ **Multi-language foundation**: English/Spanish interface implementation
 - ✅ **Enhanced window search**: Supports partial title matching with smart detection
 - ✅ **Improved logging**: Clear feedback on window detection and conflict warnings
 - ✅ **Optimized performance**: Faster typing speed (0.2s) and universal text examples
 - ✅ **Professional interface**: Clean English UI suitable for international users
+
+### v0.3
+- ✅ **English translation**: Complete english translation from spanish
 
 ### v0.2.1
 - ✅ **Enhanced window search**: Partial matching in titles with smart detection

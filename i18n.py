@@ -51,7 +51,7 @@ class I18n:
         if lang_code == 'en':
             return {
                 "app": {"title": "Windows Auto Text Writer v0.4", "version": "Version 0.4"},
-                "ui": {"configuration": "Configuration", "window_title": "Window title (partial):", "typing_speed": "Speed (sec/char):", "commands": "Commands", "control": "Control", "activity_log": "Activity Log", "language": "Language:", "about": "About"},
+                "ui": {"configuration": "Configuration", "window_title": "Window title (partial):", "typing_speed": "Speed (sec/char):", "commands": "Commands", "control": "Control", "activity_log": "Activity Log", "language": "Language:", "auto_save": "Auto-save changes:", "about": "About"},
                 "buttons": {"add_command": "Add Command", "edit_command": "Edit Command", "delete_command": "Delete Command", "load_defaults": "Load Defaults", "start": "Start (¡)", "stop": "Stop (¡)", "save": "Save", "cancel": "Cancel", "close": "Close"},
                 "defaults": {"window_title": "Notepad", "test_message": "Hello, this is a test message.", "reminder_message": "Reminder: check email.", "note_message": "Important note for later."},
                 "messages": {"status_stopped": "Stopped - Press '¡' to start", "status_running": "Running - Press '¡' to stop"},
@@ -60,7 +60,7 @@ class I18n:
         else:  # Spanish
             return {
                 "app": {"title": "Windows Auto Text Writer v0.4", "version": "Versión 0.4"},
-                "ui": {"configuration": "Configuración", "window_title": "Título de ventana (parcial):", "typing_speed": "Velocidad (seg/char):", "commands": "Comandos", "control": "Control", "activity_log": "Registro de Actividad", "language": "Idioma:", "about": "Acerca de"},
+                "ui": {"configuration": "Configuración", "window_title": "Título de ventana (parcial):", "typing_speed": "Velocidad (seg/char):", "commands": "Comandos", "control": "Control", "activity_log": "Registro de Actividad", "language": "Idioma:", "auto_save": "Guardar automáticamente:", "about": "Acerca de"},
                 "buttons": {"add_command": "Agregar Comando", "edit_command": "Editar Comando", "delete_command": "Eliminar Comando", "load_defaults": "Cargar Defaults", "start": "Iniciar (¡)", "stop": "Detener (¡)", "save": "Guardar", "cancel": "Cancelar", "close": "Cerrar"},
                 "defaults": {"window_title": "Bloc de notas", "test_message": "Hola, este es un mensaje de prueba.", "reminder_message": "Recordatorio: revisar el correo electrónico.", "note_message": "Nota importante para más tarde."},
                 "messages": {"status_stopped": "Detenido - Presiona '¡' para iniciar", "status_running": "Ejecutándose - Presiona '¡' para detener"},

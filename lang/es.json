@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "Windows Auto Text Writer v0.4",
-    "version": "Versión 0.4"
+    "title": "Windows Auto Text Writer v0.5",
+    "version": "Versión 0.5"
   },
   "ui": {
     "configuration": "Configuración",
@@ -11,6 +11,8 @@
     "control": "Control",
     "activity_log": "Registro de Actividad",
     "language": "Idioma:",
+    "auto_save": "Guardado automático:",
+    "auto_save_enabled": "Activado",
     "about": "Acerca de"
   },
   "buttons": {
@@ -85,7 +87,14 @@
     "error_writing_text": "Error escribiendo texto: {0}",
     "about_window_opened": "Ventana 'Acerca de' abierta: {0}x{1}",
     "about_adjust_tip": "Para ajustar: modifica about_dialog_width y about_dialog_height en el código",
-    "language_changed": "Idioma cambiado a Español"
+    "language_changed": "Idioma cambiado a Español",
+    "config_saved": "Configuración guardada exitosamente",
+    "config_loaded": "Configuración cargada de la sesión anterior",
+    "save_changes_title": "¿Guardar Cambios?",
+    "save_changes_message": "Tienes cambios sin guardar. ¿Quieres guardarlos antes de cerrar?",
+    "save_and_exit": "Guardar y Salir",
+    "exit_without_saving": "Salir Sin Guardar",
+    "cancel": "Cancelar"
   },
   "defaults": {
     "window_title": "Bloc de notas",
